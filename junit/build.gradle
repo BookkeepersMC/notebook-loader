@@ -2,7 +2,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'me.modmuss50.remotesign'
 
 base {
-	archivesName = "fabric-loader-junit"
+	archivesName = "notebook-loader-junit"
 }
 
 version = rootProject.version
