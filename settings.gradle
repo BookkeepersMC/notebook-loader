@@ -1,0 +1,14 @@
+pluginManagement {
+	repositories {
+		maven {
+			url = "https://maven.fabricmc.net"
+			name = "FabricMC"
+		}
+		maven {url = "https://bookkeepersmc.github.io/m2"}
+		gradlePluginPortal()
+	}
+}
+rootProject.name='notebook-loader'
+
+include "minecraft"
+include "junit"

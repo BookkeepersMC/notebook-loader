@@ -1,0 +1,18 @@
+{
+  "id": "notebookloader",
+  "name": "Notebook Loader",
+  "version": "${version}",
+  "environment": "*",
+  "description": "The base mod loader.",
+  "contact": {
+    "homepage": "https://bookkeepersmc.github.io",
+    "issues": "https://github.com/BookkeepersMC/notebook-loader/issues",
+    "sources": "https://github.com/BookkeepersMC/notebook-loader"
+  },
+  "license": "MIT",
+  "icon": "assets/notebookloader/icon.png",
+  "authors": [
+    "BookkeepersMC"
+  ],
+  "schema_version": 1
+}
