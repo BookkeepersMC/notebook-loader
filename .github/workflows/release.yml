@@ -8,8 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - run: apt update && apt install git -y && git --version
-      - run: git config --global --add safe.directory /__w/notebook-loader/notebook-loader
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
