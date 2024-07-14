@@ -1,0 +1,29 @@
+name: Release
+on: [workflow_dispatch] # Manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: apt update && apt install git -y && git --version
+      - run: git config --global --add safe.directory /__w/notebook-loader/notebook-loader
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: 'BookkeepersMC/m2'
+          path: './m2/'
+          ref: 'master'
+          token: ${{ secrets.GIT_PAT }}
+      - run: ./gradlew build publish --stacktrace
+
+      - uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: './com/'
+          author_name: CrypticVerse
+          cwd: './m2/'
+          message: "Publish Loader"
