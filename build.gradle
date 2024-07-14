@@ -357,7 +357,7 @@ publishing {
 	repositories {
 		if (ENV.MAVEN_URL) {
 			maven {
-				url "file://C:/Repositories/m2/"
+				url "file://${rootProject.rootDir}/m2/"
 			}
 		}
 	}
