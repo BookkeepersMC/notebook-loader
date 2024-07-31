@@ -1,8 +1,9 @@
-fabric-loader
+notebook-loader
 ===========
 
-The loader for mods under Fabric. It provides mod loading facilities and useful abstractions for other mods to use.
+The loader for mods under Notebook. It provides mod loading facilities and useful abstractions for other mods to use.
+Based on the fabric loader by @FabricMC
 
 ## License
 
-Licensed under the Apache License 2.0.
+Licensed under the MIT license.
