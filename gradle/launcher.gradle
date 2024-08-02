@@ -30,13 +30,13 @@ abstract class InstallDevelopmentVersionTask extends DefaultTask {
 	abstract RegularFileProperty getLoaderLibraryFile()
 
 	InstallDevelopmentVersionTask() {
-		versionName.convention("fabric-loader-${project.version.toString()}")
+		versionName.convention("notebook-loader-${project.version.toString()}")
 		minecraftVersion.convention("1.20.2")
 		versionJsonFile.set(project.layout.file(project.provider {
 			new File(getDotMinecraftDirectory(), "versions/${versionName.get()}/${versionName.get()}.json")
 		}))
 		loaderLibraryFile.set(project.layout.file(project.provider {
-			new File(getDotMinecraftDirectory(), "libraries/net/fabricmc/fabric-loader/${project.version.toString()}/fabric-loader-${project.version.toString()}.jar")
+			new File(getDotMinecraftDirectory(), "libraries/net/fabricmc/notebook-loader/${project.version.toString()}/notebook-loader-${project.version.toString()}.jar")
 		}))
 	}
 

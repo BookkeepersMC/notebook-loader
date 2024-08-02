@@ -24,11 +24,11 @@ tasks.register("generateLaunchWrapperInstallerJson", GenerateInstallerJsonTask) 
 		launchwrapper: [
 			tweakers: [
 				client: [
-					"com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.FabricClientTweaker"
+					"com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.NotebookClientTweaker"
 				],
 				common: [],
 				server: [
-					"com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.FabricServerTweaker"
+					"com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.NotebookServerTweaker"
 				]
 			]
 		]
