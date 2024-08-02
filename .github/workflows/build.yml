@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: chmod +x gradlew
-      - run: ./gradlew build publishToMavenLocal --stacktrace --warning-mode fail
+      - run: ./gradlew build --stacktrace --warning-mode fail
       - uses: actions/upload-artifact@v4
         with:
           name: Artifacts ${{ matrix.java }}

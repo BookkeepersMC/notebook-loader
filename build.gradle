@@ -411,5 +411,4 @@ task checkVersion {
 }
 
 publish.mustRunAfter checkVersion
-publish.mustRunAfter proguardJar
 github.mustRunAfter checkVersion
