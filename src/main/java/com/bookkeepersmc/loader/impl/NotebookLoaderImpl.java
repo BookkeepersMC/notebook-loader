@@ -81,10 +81,10 @@ public final class NotebookLoaderImpl extends net.fabricmc.loader.FabricLoader {
 
 	public static final int ASM_VERSION = Opcodes.ASM9;
 
-	public static final String VERSION = "0.2.0";
+	public static final String VERSION = "0.3.0";
 	public static final String MOD_ID = "notebookloader";
 
-	public static final String CACHE_DIR_NAME = ".fabric"; // relative to game dir
+	public static final String CACHE_DIR_NAME = ".notebook"; // relative to game dir
 	private static final String PROCESSED_MODS_DIR_NAME = "processedMods"; // relative to cache dir
 	public static final String REMAPPED_JARS_DIR_NAME = "remappedJars"; // relative to cache dir
 	private static final String TMP_DIR_NAME = "tmp"; // relative to cache dir
