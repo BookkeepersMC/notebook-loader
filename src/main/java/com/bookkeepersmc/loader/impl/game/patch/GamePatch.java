@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -119,5 +119,5 @@ public abstract class GamePatch {
 		return ((access & 0x0F) == (Opcodes.ACC_PUBLIC | 0 /* non-static */));
 	}
 
-	public abstract void process(FabricLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter);
+	public abstract void process(NotebookLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter);
 }

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.SystemProperties;
 import com.bookkeepersmc.loader.impl.util.UrlConversionException;
@@ -43,12 +43,12 @@ import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 public class ClasspathModCandidateFinder implements ModCandidateFinder {
 	@Override
 	public void findCandidates(ModCandidateConsumer out) {
-		if (FabricLauncherBase.getLauncher().isDevelopment()) {
+		if (NotebookLauncherBase.getLauncher().isDevelopment()) {
 			Map<Path, List<Path>> pathGroups = getPathGroups();
 
 			// Search for URLs which point to 'fabric.mod.json' entries, to be considered as mods.
 			try {
-				Enumeration<URL> mods = FabricLauncherBase.getLauncher().getTargetClassLoader().getResources("notebook.mod.json");
+				Enumeration<URL> mods = NotebookLauncherBase.getLauncher().getTargetClassLoader().getResources("notebook.mod.json");
 
 				while (mods.hasMoreElements()) {
 					URL url = mods.nextElement();
@@ -87,7 +87,7 @@ public class ClasspathModCandidateFinder implements ModCandidateFinder {
 		String prop = System.getProperty(SystemProperties.PATH_GROUPS);
 		if (prop == null) return Collections.emptyMap();
 
-		Set<Path> cp = new HashSet<>(FabricLauncherBase.getLauncher().getClassPath());
+		Set<Path> cp = new HashSet<>(NotebookLauncherBase.getLauncher().getClassPath());
 		Map<Path, List<Path>> ret = new HashMap<>();
 
 		for (String group : prop.split(File.pathSeparator+File.pathSeparator)) {

@@ -51,7 +51,7 @@ import com.bookkeepersmc.loader.impl.discovery.ModResolver;
 import com.bookkeepersmc.loader.impl.discovery.RuntimeModRemapper;
 import com.bookkeepersmc.loader.impl.entrypoint.EntrypointStorage;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.launch.knot.Knot;
 import com.bookkeepersmc.loader.impl.metadata.DependencyOverrides;
 import com.bookkeepersmc.loader.impl.metadata.EntrypointMetadata;
@@ -70,8 +70,8 @@ import org.jetbrains.annotations.VisibleForTesting;
 import org.objectweb.asm.Opcodes;
 
 @SuppressWarnings("deprecation")
-public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
-	public static final FabricLoaderImpl INSTANCE = InitHelper.get();
+public final class NotebookLoaderImpl extends net.fabricmc.loader.FabricLoader {
+	public static final NotebookLoaderImpl INSTANCE = InitHelper.get();
 
 	public static final int ASM_VERSION = Opcodes.ASM9;
 
@@ -102,7 +102,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 	private Path gameDir;
 	private Path configDir;
 
-	private FabricLoaderImpl() { }
+	private NotebookLoaderImpl() { }
 
 	/**
 	 * Freeze the FabricLoader, preventing additional mods from being loaded.
@@ -144,7 +144,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 
 	@Override
 	public EnvType getEnvironmentType() {
-		return FabricLauncherBase.getLauncher().getEnvironmentType();
+		return NotebookLauncherBase.getLauncher().getEnvironmentType();
 	}
 
 	/**
@@ -359,7 +359,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 		for (ModContainerImpl mod : mods) {
 			if (!mod.getMetadata().getId().equals(MOD_ID) && !mod.getMetadata().getType().equals("builtin")) {
 				for (Path path : mod.getCodeSourcePaths()) {
-					FabricLauncherBase.getLauncher().addToClassPath(path);
+					NotebookLauncherBase.getLauncher().addToClassPath(path);
 				}
 			}
 		}
@@ -390,7 +390,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 		}
 
 		RuntimeException exception = null;
-		Collection<EntrypointContainer<T>> entrypoints = FabricLoaderImpl.INSTANCE.getEntrypointContainers(key, type);
+		Collection<EntrypointContainer<T>> entrypoints = NotebookLoaderImpl.INSTANCE.getEntrypointContainers(key, type);
 
 		Log.debug(LogCategory.ENTRYPOINT, "Iterating over entrypoint '%s'", key);
 
@@ -414,10 +414,10 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 	@Override
 	public MappingResolver getMappingResolver() {
 		if (mappingResolver == null) {
-			final String targetNamespace = FabricLauncherBase.getLauncher().getTargetNamespace();
+			final String targetNamespace = NotebookLauncherBase.getLauncher().getTargetNamespace();
 
 			mappingResolver = new LazyMappingResolver(() -> new MappingResolverImpl(
-				FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings(),
+				NotebookLauncherBase.getLauncher().getMappingConfiguration().getMappings(),
 				targetNamespace
 			), targetNamespace);
 		}
@@ -461,7 +461,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 
 	@Override
 	public boolean isDevelopmentEnvironment() {
-		return FabricLauncherBase.getLauncher().isDevelopment();
+		return NotebookLauncherBase.getLauncher().isDevelopment();
 	}
 
 	private void addMod(ModCandidate candidate) throws ModResolutionException {
@@ -485,7 +485,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 				}
 
 				try {
-					adapterMap.put(laEntry.getKey(), (LanguageAdapter) Class.forName(laEntry.getValue(), true, FabricLauncherBase.getLauncher().getTargetClassLoader()).getDeclaredConstructor().newInstance());
+					adapterMap.put(laEntry.getKey(), (LanguageAdapter) Class.forName(laEntry.getValue(), true, NotebookLauncherBase.getLauncher().getTargetClassLoader()).getDeclaredConstructor().newInstance());
 				} catch (Exception e) {
 					throw new RuntimeException("Failed to instantiate language adapter: " + laEntry.getKey(), e);
 				}
@@ -524,7 +524,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 			if (path == null) throw new RuntimeException(String.format("Missing accessWidener file %s from mod %s", accessWidener, modContainer.getMetadata().getId()));
 
 			try (BufferedReader reader = Files.newBufferedReader(path)) {
-				accessWidenerReader.read(reader, FabricLauncherBase.getLauncher().getTargetNamespace());
+				accessWidenerReader.read(reader, NotebookLauncherBase.getLauncher().getTargetNamespace());
 			} catch (Exception e) {
 				throw new RuntimeException("Failed to read accessWidener file from mod " + modMetadata.getId(), e);
 			}
@@ -536,9 +536,9 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 			throw new RuntimeException("Cannot instantiate mods when not frozen!");
 		}
 
-		if (gameInstance != null && FabricLauncherBase.getLauncher() instanceof Knot) {
+		if (gameInstance != null && NotebookLauncherBase.getLauncher() instanceof Knot) {
 			ClassLoader gameClassLoader = gameInstance.getClass().getClassLoader();
-			ClassLoader targetClassLoader = FabricLauncherBase.getLauncher().getTargetClassLoader();
+			ClassLoader targetClassLoader = NotebookLauncherBase.getLauncher().getTargetClassLoader();
 			boolean matchesKnot = (gameClassLoader == targetClassLoader);
 			boolean containsKnot = false;
 
@@ -564,7 +564,7 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 							+ " - Expected game class loader: %s\n"
 							+ " - Actual game class loader: %s\n"
 							+ "Could not find the expected class loader in game class loader parents!\n",
-							FabricLauncherBase.getLauncher().getTargetClassLoader(), gameClassLoader);
+							NotebookLauncherBase.getLauncher().getTargetClassLoader(), gameClassLoader);
 				}
 			}
 		}
@@ -621,16 +621,16 @@ public final class FabricLoaderImpl extends net.fabricmc.loader.FabricLoader {
 	 * Provides singleton for static init assignment regardless of load order.
 	 */
 	public static class InitHelper {
-		private static FabricLoaderImpl instance;
+		private static NotebookLoaderImpl instance;
 
-		public static FabricLoaderImpl get() {
-			if (instance == null) instance = new FabricLoaderImpl();
+		public static NotebookLoaderImpl get() {
+			if (instance == null) instance = new NotebookLoaderImpl();
 
 			return instance;
 		}
 	}
 
 	static {
-		LoaderUtil.verifyNotInTargetCl(FabricLoaderImpl.class);
+		LoaderUtil.verifyNotInTargetCl(NotebookLoaderImpl.class);
 	}
 }

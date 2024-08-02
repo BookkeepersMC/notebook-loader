@@ -16,12 +16,12 @@
 
 package com.bookkeepersmc.loader.impl.launch.knot;
 
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 
 import org.spongepowered.asm.service.IGlobalPropertyService;
 import org.spongepowered.asm.service.IPropertyKey;
 
-public class FabricGlobalPropertyService implements IGlobalPropertyService {
+public class NotebookGlobalPropertyService implements IGlobalPropertyService {
 	@Override
 	public IPropertyKey resolveKey(String name) {
 		return new MixinStringPropertyKey(name);
@@ -34,23 +34,23 @@ public class FabricGlobalPropertyService implements IGlobalPropertyService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getProperty(IPropertyKey key) {
-		return (T) FabricLauncherBase.getProperties().get(keyString(key));
+		return (T) NotebookLauncherBase.getProperties().get(keyString(key));
 	}
 
 	@Override
 	public void setProperty(IPropertyKey key, Object value) {
-		FabricLauncherBase.getProperties().put(keyString(key), value);
+		NotebookLauncherBase.getProperties().put(keyString(key), value);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getProperty(IPropertyKey key, T defaultValue) {
-		return (T) FabricLauncherBase.getProperties().getOrDefault(keyString(key), defaultValue);
+		return (T) NotebookLauncherBase.getProperties().getOrDefault(keyString(key), defaultValue);
 	}
 
 	@Override
 	public String getPropertyString(IPropertyKey key, String defaultValue) {
-		Object o = FabricLauncherBase.getProperties().get(keyString(key));
+		Object o = NotebookLauncherBase.getProperties().get(keyString(key));
 		return o != null ? o.toString() : defaultValue;
 	}
 }

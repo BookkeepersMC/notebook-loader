@@ -28,7 +28,7 @@ import java.util.List;
 import com.bookkeepersmc.loader.api.LanguageAdapter;
 import com.bookkeepersmc.loader.api.LanguageAdapterException;
 import com.bookkeepersmc.loader.api.ModContainer;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 
 public final class DefaultLanguageAdapter implements LanguageAdapter {
 	public static final DefaultLanguageAdapter INSTANCE = new DefaultLanguageAdapter();
@@ -47,7 +47,7 @@ public final class DefaultLanguageAdapter implements LanguageAdapter {
 		Class<?> c;
 
 		try {
-			c = Class.forName(methodSplit[0], true, FabricLauncherBase.getLauncher().getTargetClassLoader());
+			c = Class.forName(methodSplit[0], true, NotebookLauncherBase.getLauncher().getTargetClassLoader());
 		} catch (ClassNotFoundException e) {
 			throw new LanguageAdapterException(e);
 		}

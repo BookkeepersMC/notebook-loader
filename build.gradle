@@ -29,7 +29,7 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: "com.diffplug.spotless"
 
-	def constantsSource = rootProject.file("src/main/java/com/bookkeepersmc/loader/impl/FabricLoaderImpl.java").text
+	def constantsSource = rootProject.file("src/main/java/com/bookkeepersmc/loader/impl/NotebookLoaderImpl.java").text
 	version = (constantsSource =~ /\s+VERSION\s*=\s*"(.*)";/)[0][1] + (ENV.GITHUB_ACTIONS ? "" : "+local")
 
 	repositories {
@@ -386,7 +386,7 @@ task github(dependsOn: publish) {
 		def repository = github.getRepository(ENV.GITHUB_REPOSITORY)
 
 		def releaseBuilder = new GHReleaseBuilder(repository, version as String)
-		releaseBuilder.name("Fabric Loader $version")
+		releaseBuilder.name("Notebook Loader $version")
 		releaseBuilder.body(ENV.CHANGELOG ?: "No changelog provided")
 		releaseBuilder.commitish(getBranch())
 		releaseBuilder.prerelease(false)
@@ -409,4 +409,3 @@ task checkVersion {
 
 publish.mustRunAfter checkVersion
 github.mustRunAfter checkVersion
-proguardJar.dependsOn publish

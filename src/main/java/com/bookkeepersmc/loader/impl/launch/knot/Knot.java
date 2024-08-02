@@ -38,18 +38,18 @@ import java.util.zip.ZipFile;
 
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
-import com.bookkeepersmc.loader.impl.launch.FabricMixinBootstrap;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookMixinBootstrap;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.SystemProperties;
 import com.bookkeepersmc.loader.impl.util.UrlUtil;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
-public final class Knot extends FabricLauncherBase {
+public final class Knot extends NotebookLauncherBase {
 	private static final boolean IS_DEVELOPMENT = Boolean.parseBoolean(System.getProperty(SystemProperties.DEVELOPMENT, "false"));
 
 	protected Map<String, Object> properties = new HashMap<>();
@@ -129,7 +129,7 @@ public final class Knot extends FabricLauncherBase {
 
 		provider = createGameProvider(args);
 		Log.finishBuiltinConfig();
-		Log.info(LogCategory.GAME_PROVIDER, "Loading %s %s with Fabric Loader %s", provider.getGameName(), provider.getRawGameVersion(), FabricLoaderImpl.VERSION);
+		Log.info(LogCategory.GAME_PROVIDER, "Loading %s %s with Notebook %s", provider.getGameName(), provider.getRawGameVersion(), NotebookLoaderImpl.VERSION);
 
 		// Setup classloader
 		// TODO: Provide KnotCompatibilityClassLoader in non-exclusive-Fabric pre-1.13 environments?
@@ -141,15 +141,15 @@ public final class Knot extends FabricLauncherBase {
 
 		Thread.currentThread().setContextClassLoader(cl);
 
-		FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
+		NotebookLoaderImpl loader = NotebookLoaderImpl.INSTANCE;
 		loader.setGameProvider(provider);
 		loader.load();
 		loader.freeze();
 
-		FabricLoaderImpl.INSTANCE.loadAccessWideners();
+		NotebookLoaderImpl.INSTANCE.loadAccessWideners();
 
-		FabricMixinBootstrap.init(getEnvironmentType(), loader);
-		FabricLauncherBase.finishMixinBootstrapping();
+		NotebookMixinBootstrap.init(getEnvironmentType(), loader);
+		NotebookLauncherBase.finishMixinBootstrapping();
 
 		classLoader.initializeTransformers();
 

@@ -22,8 +22,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.api.FabricLoader;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.api.NotebookLoader;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 
 import org.objectweb.asm.ClassReader;
@@ -34,18 +34,18 @@ public class JavaLanguageAdapter implements LanguageAdapter {
 		// TODO: Be a bit more involved
 		switch (itfString) {
 		case "com/bookkeepersmc/api/ClientModInitializer":
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			if (NotebookLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 				return false;
 			}
 
 			break;
 		case "com/bookkeepersmc/api/DedicatedServerModInitializer":
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			if (NotebookLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 				return false;
 			}
 		}
 
-		InputStream stream = FabricLauncherBase.getLauncher().getResourceAsStream(LoaderUtil.getClassFileName(itfString));
+		InputStream stream = NotebookLauncherBase.getLauncher().getResourceAsStream(LoaderUtil.getClassFileName(itfString));
 		if (stream == null) return false;
 
 		ClassReader reader = new ClassReader(stream);
@@ -62,7 +62,7 @@ public class JavaLanguageAdapter implements LanguageAdapter {
 	}
 
 	public static Class<?> getClass(String className, Options options) throws ClassNotFoundException, IOException {
-		InputStream stream = FabricLauncherBase.getLauncher().getResourceAsStream(LoaderUtil.getClassFileName(className));
+		InputStream stream = NotebookLauncherBase.getLauncher().getResourceAsStream(LoaderUtil.getClassFileName(className));
 		if (stream == null) throw new ClassNotFoundException("Could not find or load class " + className);
 
 		ClassReader reader = new ClassReader(stream);
@@ -82,7 +82,7 @@ public class JavaLanguageAdapter implements LanguageAdapter {
 		}
 
 		stream.close();
-		return FabricLauncherBase.getClass(className);
+		return NotebookLauncherBase.getClass(className);
 	}
 
 	@Override

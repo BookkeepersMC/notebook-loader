@@ -16,6 +16,8 @@
 
 package com.bookkeepersmc.api;
 
+import com.bookkeepersmc.loader.api.NotebookLoader;
+
 /**
  * A mod initializer ran only on {@link EnvType#CLIENT}.
  *
@@ -26,7 +28,7 @@ package com.bookkeepersmc.api;
  *
  * @see ModInitializer
  * @see DedicatedServerModInitializer
- * @see com.bookkeepersmc.loader.api.FabricLoader#getEntrypointContainers(String, Class)
+ * @see NotebookLoader#getEntrypointContainers(String, Class)
  */
 @FunctionalInterface
 public interface ClientModInitializer {

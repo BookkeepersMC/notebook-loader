@@ -19,7 +19,7 @@ package com.bookkeepersmc.loader.api;
 /**
  * Represents an exception that arises when obtaining entrypoints.
  *
- * @see FabricLoader#getEntrypointContainers(String, Class)
+ * @see NotebookLoader#getEntrypointContainers(String, Class)
  */
 @SuppressWarnings("serial")
 public class EntrypointException extends RuntimeException {

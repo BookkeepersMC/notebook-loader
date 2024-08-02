@@ -21,7 +21,7 @@ import java.io.File;
 import com.bookkeepersmc.api.ClientModInitializer;
 import com.bookkeepersmc.api.DedicatedServerModInitializer;
 import com.bookkeepersmc.api.ModInitializer;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
@@ -30,16 +30,16 @@ public final class Hooks {
 
 	public static String appletMainClass;
 
-	public static final String FABRIC = "fabric";
+	public static final String NOTEBOOK = "notebook";
 	public static final String VANILLA = "vanilla";
 
 	public static String insertBranding(final String brand) {
 		if (brand == null || brand.isEmpty()) {
 			Log.warn(LogCategory.GAME_PROVIDER, "Null or empty branding found!", new IllegalStateException());
-			return FABRIC;
+			return NOTEBOOK;
 		}
 
-		return VANILLA.equals(brand) ? FABRIC : brand + ',' + FABRIC;
+		return VANILLA.equals(brand) ? NOTEBOOK : brand + ',' + NOTEBOOK;
 	}
 
 	public static void startClient(File runDir, Object gameInstance) {
@@ -47,7 +47,7 @@ public final class Hooks {
 			runDir = new File(".");
 		}
 
-		FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
+		NotebookLoaderImpl loader = NotebookLoaderImpl.INSTANCE;
 		loader.prepareModInit(runDir.toPath(), gameInstance);
 		loader.invokeEntrypoints("main", ModInitializer.class, ModInitializer::onInitialize);
 		loader.invokeEntrypoints("client", ClientModInitializer.class, ClientModInitializer::onInitializeClient);
@@ -58,13 +58,13 @@ public final class Hooks {
 			runDir = new File(".");
 		}
 
-		FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
+		NotebookLoaderImpl loader = NotebookLoaderImpl.INSTANCE;
 		loader.prepareModInit(runDir.toPath(), gameInstance);
 		loader.invokeEntrypoints("main", ModInitializer.class, ModInitializer::onInitialize);
 		loader.invokeEntrypoints("server", DedicatedServerModInitializer.class, DedicatedServerModInitializer::onInitializeServer);
 	}
 
 	public static void setGameInstance(Object gameInstance) {
-		FabricLoaderImpl.INSTANCE.setGameInstance(gameInstance);
+		NotebookLoaderImpl.INSTANCE.setGameInstance(gameInstance);
 	}
 }

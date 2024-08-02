@@ -21,7 +21,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.api.NotebookLoader;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 
 /**
  * The main class for mod loading operations.
@@ -29,13 +30,13 @@ import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
  * @deprecated Use {@link net.fabricmc.loader.api.FabricLoader}
  */
 @Deprecated
-public abstract class FabricLoader implements com.bookkeepersmc.loader.api.FabricLoader {
+public abstract class FabricLoader implements NotebookLoader {
 	/**
 	 * @deprecated Use {@link net.fabricmc.loader.api.FabricLoader#getInstance()} where possible,
 	 * report missing areas as an issue.
 	 */
 	@Deprecated
-	public static final FabricLoader INSTANCE = FabricLoaderImpl.InitHelper.get();
+	public static final FabricLoader INSTANCE = NotebookLoaderImpl.InitHelper.get();
 
 	public File getModsDirectory() {
 		return getModsDirectory0().toFile();

@@ -26,7 +26,9 @@ import java.util.Collection;
 import java.util.List;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.api.FabricLoader;
+import com.bookkeepersmc.loader.api.NotebookLoader;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.util.UrlUtil;
 
 /**
@@ -34,7 +36,7 @@ import com.bookkeepersmc.loader.impl.util.UrlUtil;
  */
 @Deprecated
 public class FabricLauncherBase implements FabricLauncher {
-	private final com.bookkeepersmc.loader.impl.launch.FabricLauncher parent = com.bookkeepersmc.loader.impl.launch.FabricLauncherBase.getLauncher();
+	private final NotebookLauncher parent = NotebookLauncherBase.getLauncher();
 
 	public static Class<?> getClass(String className) throws ClassNotFoundException {
 		return Class.forName(className, true, getLauncher().getTargetClassLoader());
@@ -51,7 +53,7 @@ public class FabricLauncherBase implements FabricLauncher {
 
 	@Override
 	public EnvType getEnvironmentType() {
-		return FabricLoader.getInstance().getEnvironmentType();
+		return NotebookLoader.getInstance().getEnvironmentType();
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class FabricLauncherBase implements FabricLauncher {
 
 	@Override
 	public boolean isDevelopment() {
-		return FabricLoader.getInstance().isDevelopmentEnvironment();
+		return NotebookLoader.getInstance().isDevelopmentEnvironment();
 	}
 
 	@Override

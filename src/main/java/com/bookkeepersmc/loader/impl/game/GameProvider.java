@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import com.bookkeepersmc.loader.api.metadata.ModMetadata;
 import com.bookkeepersmc.loader.impl.game.patch.GameTransformer;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.util.Arguments;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 
@@ -40,10 +40,10 @@ public interface GameProvider { // name directly referenced in net.fabricmc.load
 	boolean requiresUrlClassLoader();
 
 	boolean isEnabled();
-	boolean locateGame(FabricLauncher launcher, String[] args);
-	void initialize(FabricLauncher launcher);
+	boolean locateGame(NotebookLauncher launcher, String[] args);
+	void initialize(NotebookLauncher launcher);
 	GameTransformer getEntrypointTransformer();
-	void unlockClassPath(FabricLauncher launcher);
+	void unlockClassPath(NotebookLauncher launcher);
 	void launch(ClassLoader loader);
 
 	default boolean displayCrash(Throwable exception, String context) {

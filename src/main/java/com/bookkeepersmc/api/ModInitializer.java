@@ -16,6 +16,8 @@
 
 package com.bookkeepersmc.api;
 
+import com.bookkeepersmc.loader.api.NotebookLoader;
+
 /**
  * A mod initializer.
  *
@@ -23,7 +25,7 @@ package com.bookkeepersmc.api;
  *
  * @see ClientModInitializer
  * @see DedicatedServerModInitializer
- * @see com.bookkeepersmc.loader.api.FabricLoader#getEntrypointContainers(String, Class)
+ * @see NotebookLoader#getEntrypointContainers(String, Class)
  */
 @FunctionalInterface
 public interface ModInitializer {

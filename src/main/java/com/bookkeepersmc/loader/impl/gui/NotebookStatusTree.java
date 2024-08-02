@@ -33,8 +33,8 @@ import java.util.function.UnaryOperator;
 
 import com.bookkeepersmc.loader.impl.FormattedException;
 
-public final class FabricStatusTree {
-	public enum FabricTreeWarningLevel {
+public final class NotebookStatusTree {
+	public enum NotebookTreeWarningLevel {
 		ERROR,
 		WARN,
 		INFO,
@@ -42,20 +42,20 @@ public final class FabricStatusTree {
 
 		public final String lowerCaseName = name().toLowerCase(Locale.ROOT);
 
-		public boolean isHigherThan(FabricTreeWarningLevel other) {
+		public boolean isHigherThan(NotebookTreeWarningLevel other) {
 			return ordinal() < other.ordinal();
 		}
 
-		public boolean isAtLeast(FabricTreeWarningLevel other) {
+		public boolean isAtLeast(NotebookTreeWarningLevel other) {
 			return ordinal() <= other.ordinal();
 		}
 
-		public static FabricTreeWarningLevel getHighest(FabricTreeWarningLevel a, FabricTreeWarningLevel b) {
+		public static NotebookTreeWarningLevel getHighest(NotebookTreeWarningLevel a, NotebookTreeWarningLevel b) {
 			return a.isHigherThan(b) ? a : b;
 		}
 	}
 
-	public enum FabricBasicButtonType {
+	public enum NotebookBasicButtonType {
 		/** Sends the status message to the main application, then disables itself. */
 		CLICK_ONCE,
 		/** Sends the status message to the main application, remains enabled. */
@@ -92,10 +92,10 @@ public final class FabricStatusTree {
 
 	public final String title;
 	public final String mainText;
-	public final List<FabricStatusTab> tabs = new ArrayList<>();
-	public final List<FabricStatusButton> buttons = new ArrayList<>();
+	public final List<NotebookStatusTab> tabs = new ArrayList<>();
+	public final List<NotebookStatusButton> buttons = new ArrayList<>();
 
-	public FabricStatusTree(String title, String mainText) {
+	public NotebookStatusTree(String title, String mainText) {
 		Objects.requireNonNull(title, "null title");
 		Objects.requireNonNull(mainText, "null mainText");
 
@@ -103,16 +103,16 @@ public final class FabricStatusTree {
 		this.mainText = mainText;
 	}
 
-	public FabricStatusTree(DataInputStream is) throws IOException {
+	public NotebookStatusTree(DataInputStream is) throws IOException {
 		title = is.readUTF();
 		mainText = is.readUTF();
 
 		for (int i = is.readInt(); i > 0; i--) {
-			tabs.add(new FabricStatusTab(is));
+			tabs.add(new NotebookStatusTab(is));
 		}
 
 		for (int i = is.readInt(); i > 0; i--) {
-			buttons.add(new FabricStatusButton(is));
+			buttons.add(new NotebookStatusButton(is));
 		}
 	}
 
@@ -121,45 +121,45 @@ public final class FabricStatusTree {
 		os.writeUTF(mainText);
 		os.writeInt(tabs.size());
 
-		for (FabricStatusTab tab : tabs) {
+		for (NotebookStatusTab tab : tabs) {
 			tab.writeTo(os);
 		}
 
 		os.writeInt(buttons.size());
 
-		for (FabricStatusButton button : buttons) {
+		for (NotebookStatusButton button : buttons) {
 			button.writeTo(os);
 		}
 	}
 
-	public FabricStatusTab addTab(String name) {
-		FabricStatusTab tab = new FabricStatusTab(name);
+	public NotebookStatusTab addTab(String name) {
+		NotebookStatusTab tab = new NotebookStatusTab(name);
 		tabs.add(tab);
 		return tab;
 	}
 
-	public FabricStatusButton addButton(String text, FabricBasicButtonType type) {
-		FabricStatusButton button = new FabricStatusButton(text, type);
+	public NotebookStatusButton addButton(String text, NotebookBasicButtonType type) {
+		NotebookStatusButton button = new NotebookStatusButton(text, type);
 		buttons.add(button);
 		return button;
 	}
 
-	public static final class FabricStatusButton {
+	public static final class NotebookStatusButton {
 		public final String text;
-		public final FabricBasicButtonType type;
+		public final NotebookBasicButtonType type;
 		public String clipboard;
 		public boolean shouldClose, shouldContinue;
 
-		public FabricStatusButton(String text, FabricBasicButtonType type) {
+		public NotebookStatusButton(String text, NotebookBasicButtonType type) {
 			Objects.requireNonNull(text, "null text");
 
 			this.text = text;
 			this.type = type;
 		}
 
-		public FabricStatusButton(DataInputStream is) throws IOException {
+		public NotebookStatusButton(DataInputStream is) throws IOException {
 			text = is.readUTF();
-			type = FabricBasicButtonType.valueOf(is.readUTF());
+			type = NotebookBasicButtonType.valueOf(is.readUTF());
 			shouldClose = is.readBoolean();
 			shouldContinue = is.readBoolean();
 
@@ -180,35 +180,35 @@ public final class FabricStatusTree {
 			}
 		}
 
-		public FabricStatusButton makeClose() {
+		public NotebookStatusButton makeClose() {
 			shouldClose = true;
 			return this;
 		}
 
-		public FabricStatusButton makeContinue() {
+		public NotebookStatusButton makeContinue() {
 			this.shouldContinue = true;
 			return this;
 		}
 
-		public FabricStatusButton withClipboard(String clipboard) {
+		public NotebookStatusButton withClipboard(String clipboard) {
 			this.clipboard = clipboard;
 			return this;
 		}
 	}
 
-	public static final class FabricStatusTab {
-		public final FabricStatusNode node;
+	public static final class NotebookStatusTab {
+		public final NotebookStatusNode node;
 
 		/** The minimum warning level to display for this tab. */
-		public FabricTreeWarningLevel filterLevel = FabricTreeWarningLevel.NONE;
+		public NotebookTreeWarningLevel filterLevel = NotebookTreeWarningLevel.NONE;
 
-		public FabricStatusTab(String name) {
-			this.node = new FabricStatusNode(null, name);
+		public NotebookStatusTab(String name) {
+			this.node = new NotebookStatusNode(null, name);
 		}
 
-		public FabricStatusTab(DataInputStream is) throws IOException {
-			node = new FabricStatusNode(null, is);
-			filterLevel = FabricTreeWarningLevel.valueOf(is.readUTF());
+		public NotebookStatusTab(DataInputStream is) throws IOException {
+			node = new NotebookStatusNode(null, is);
+			filterLevel = NotebookTreeWarningLevel.valueOf(is.readUTF());
 		}
 
 		public void writeTo(DataOutputStream os) throws IOException {
@@ -216,42 +216,42 @@ public final class FabricStatusTree {
 			os.writeUTF(filterLevel.name());
 		}
 
-		public FabricStatusNode addChild(String name) {
+		public NotebookStatusNode addChild(String name) {
 			return node.addChild(name);
 		}
 	}
 
-	public static final class FabricStatusNode {
-		private FabricStatusNode parent;
+	public static final class NotebookStatusNode {
+		private NotebookStatusNode parent;
 		public String name;
 		/** The icon type. There can be a maximum of 2 decorations (added with "+" symbols), or 3 if the
-		 * {@link #setWarningLevel(FabricTreeWarningLevel) warning level} is set to
-		 * {@link FabricTreeWarningLevel#NONE } */
+		 * {@link #setWarningLevel(NotebookTreeWarningLevel) warning level} is set to
+		 * {@link NotebookTreeWarningLevel#NONE } */
 		public String iconType = ICON_TYPE_DEFAULT;
-		private FabricTreeWarningLevel warningLevel = FabricTreeWarningLevel.NONE;
+		private NotebookTreeWarningLevel warningLevel = NotebookTreeWarningLevel.NONE;
 		public boolean expandByDefault = false;
 		/** Extra text for more information. Lines should be separated by "\n". */
 		public String details;
-		public final List<FabricStatusNode> children = new ArrayList<>();
+		public final List<NotebookStatusNode> children = new ArrayList<>();
 
-		private FabricStatusNode(FabricStatusNode parent, String name) {
+		private NotebookStatusNode(NotebookStatusNode parent, String name) {
 			Objects.requireNonNull(name, "null name");
 
 			this.parent = parent;
 			this.name = name;
 		}
 
-		public FabricStatusNode(FabricStatusNode parent, DataInputStream is) throws IOException {
+		public NotebookStatusNode(NotebookStatusNode parent, DataInputStream is) throws IOException {
 			this.parent = parent;
 
 			name = is.readUTF();
 			iconType = is.readUTF();
-			warningLevel = FabricTreeWarningLevel.valueOf(is.readUTF());
+			warningLevel = NotebookTreeWarningLevel.valueOf(is.readUTF());
 			expandByDefault = is.readBoolean();
 			if (is.readBoolean()) details = is.readUTF();
 
 			for (int i = is.readInt(); i > 0; i--) {
-				children.add(new FabricStatusNode(this, is));
+				children.add(new NotebookStatusNode(this, is));
 			}
 		}
 
@@ -264,22 +264,22 @@ public final class FabricStatusTree {
 			if (details != null) os.writeUTF(details);
 			os.writeInt(children.size());
 
-			for (FabricStatusNode child : children) {
+			for (NotebookStatusNode child : children) {
 				child.writeTo(os);
 			}
 		}
 
-		public void moveTo(FabricStatusNode newParent) {
+		public void moveTo(NotebookStatusNode newParent) {
 			parent.children.remove(this);
 			this.parent = newParent;
 			newParent.children.add(this);
 		}
 
-		public FabricTreeWarningLevel getMaximumWarningLevel() {
+		public NotebookTreeWarningLevel getMaximumWarningLevel() {
 			return warningLevel;
 		}
 
-		public void setWarningLevel(FabricTreeWarningLevel level) {
+		public void setWarningLevel(NotebookTreeWarningLevel level) {
 			if (this.warningLevel == level) {
 				return;
 			}
@@ -293,35 +293,35 @@ public final class FabricStatusTree {
 				}
 
 				this.warningLevel = level;
-				expandByDefault |= level.isAtLeast(FabricTreeWarningLevel.WARN);
+				expandByDefault |= level.isAtLeast(NotebookTreeWarningLevel.WARN);
 			}
 		}
 
 		public void setError() {
-			setWarningLevel(FabricTreeWarningLevel.ERROR);
+			setWarningLevel(NotebookTreeWarningLevel.ERROR);
 		}
 
 		public void setWarning() {
-			setWarningLevel(FabricTreeWarningLevel.WARN);
+			setWarningLevel(NotebookTreeWarningLevel.WARN);
 		}
 
 		public void setInfo() {
-			setWarningLevel(FabricTreeWarningLevel.INFO);
+			setWarningLevel(NotebookTreeWarningLevel.INFO);
 		}
 
-		private FabricStatusNode addChild(String string) {
+		private NotebookStatusNode addChild(String string) {
 			if (string.startsWith("\t")) {
 				if (children.size() == 0) {
-					FabricStatusNode rootChild = new FabricStatusNode(this, "");
+					NotebookStatusNode rootChild = new NotebookStatusNode(this, "");
 					children.add(rootChild);
 				}
 
-				FabricStatusNode lastChild = children.get(children.size() - 1);
+				NotebookStatusNode lastChild = children.get(children.size() - 1);
 				lastChild.addChild(string.substring(1));
 				lastChild.expandByDefault = true;
 				return lastChild;
 			} else {
-				FabricStatusNode child = new FabricStatusNode(this, cleanForNode(string));
+				NotebookStatusNode child = new NotebookStatusNode(this, cleanForNode(string));
 				children.add(child);
 				return child;
 			}
@@ -340,10 +340,10 @@ public final class FabricStatusTree {
 			return string;
 		}
 
-		public FabricStatusNode addMessage(String message, FabricTreeWarningLevel warningLevel) {
+		public NotebookStatusNode addMessage(String message, NotebookTreeWarningLevel warningLevel) {
 			String[] lines = message.split("\n");
 
-			FabricStatusNode sub = new FabricStatusNode(this, lines[0]);
+			NotebookStatusNode sub = new NotebookStatusNode(this, lines[0]);
 			children.add(sub);
 			sub.setWarningLevel(warningLevel);
 
@@ -354,11 +354,11 @@ public final class FabricStatusTree {
 			return sub;
 		}
 
-		public FabricStatusNode addException(Throwable exception) {
+		public NotebookStatusNode addException(Throwable exception) {
 			return addException(this, Collections.newSetFromMap(new IdentityHashMap<>()), exception, UnaryOperator.identity(), new StackTraceElement[0]);
 		}
 
-		public FabricStatusNode addCleanedException(Throwable exception) {
+		public NotebookStatusNode addCleanedException(Throwable exception) {
 			return addException(this, Collections.newSetFromMap(new IdentityHashMap<>()), exception, e -> {
 				// Remove some self-repeating exception traces from the tree
 				// (for example the RuntimeException that is is created unnecessarily by ForkJoinTask)
@@ -386,17 +386,17 @@ public final class FabricStatusTree {
 			}, new StackTraceElement[0]);
 		}
 
-		private static FabricStatusNode addException(FabricStatusNode node, Set<Throwable> seen, Throwable exception, UnaryOperator<Throwable> filter, StackTraceElement[] parentTrace) {
+		private static NotebookStatusNode addException(NotebookStatusNode node, Set<Throwable> seen, Throwable exception, UnaryOperator<Throwable> filter, StackTraceElement[] parentTrace) {
 			if (!seen.add(exception)) {
 				return node;
 			}
 
 			exception = filter.apply(exception);
-			FabricStatusNode sub = node.addException(exception, parentTrace);
+			NotebookStatusNode sub = node.addException(exception, parentTrace);
 			StackTraceElement[] trace = exception.getStackTrace();
 
 			for (Throwable t : exception.getSuppressed()) {
-				FabricStatusNode suppressed = addException(sub, seen, t, filter, trace);
+				NotebookStatusNode suppressed = addException(sub, seen, t, filter, trace);
 				suppressed.name += " (suppressed)";
 				suppressed.expandByDefault = false;
 			}
@@ -408,7 +408,7 @@ public final class FabricStatusTree {
 			return sub;
 		}
 
-		private FabricStatusNode addException(Throwable exception, StackTraceElement[] parentTrace) {
+		private NotebookStatusNode addException(Throwable exception, StackTraceElement[] parentTrace) {
 			boolean showTrace = !(exception instanceof FormattedException) || exception.getCause() != null;
 			String msg;
 
@@ -420,7 +420,7 @@ public final class FabricStatusTree {
 				msg = String.format("%s: %s", exception.getClass().getSimpleName(), exception.getMessage());
 			}
 
-			FabricStatusNode sub = addMessage(msg, FabricTreeWarningLevel.ERROR);
+			NotebookStatusNode sub = addMessage(msg, NotebookTreeWarningLevel.ERROR);
 
 			if (!showTrace) return sub;
 
@@ -457,10 +457,10 @@ public final class FabricStatusTree {
 				return;
 			}
 
-			FabricStatusNode child = children.remove(0);
+			NotebookStatusNode child = children.remove(0);
 			name += join + child.name;
 
-			for (FabricStatusNode cc : child.children) {
+			for (NotebookStatusNode cc : child.children) {
 				cc.parent = this;
 				children.add(cc);
 			}
@@ -482,27 +482,27 @@ public final class FabricStatusTree {
 		}
 
 		public void mergeChildFilePaths(String folderType) {
-			for (FabricStatusNode node : children) {
+			for (NotebookStatusNode node : children) {
 				node.mergeSingleChildFilePath(folderType);
 			}
 		}
 
-		public FabricStatusNode getFileNode(String file, String folderType, String fileType) {
-			FabricStatusNode fileNode = this;
+		public NotebookStatusNode getFileNode(String file, String folderType, String fileType) {
+			NotebookStatusNode fileNode = this;
 
 			pathIteration: for (String s : file.split("/")) {
 				if (s.isEmpty()) {
 					continue;
 				}
 
-				for (FabricStatusNode c : fileNode.children) {
+				for (NotebookStatusNode c : fileNode.children) {
 					if (c.name.equals(s)) {
 						fileNode = c;
 						continue pathIteration;
 					}
 				}
 
-				if (fileNode.iconType.equals(FabricStatusTree.ICON_TYPE_DEFAULT)) {
+				if (fileNode.iconType.equals(NotebookStatusTree.ICON_TYPE_DEFAULT)) {
 					fileNode.iconType = folderType;
 				}
 

@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bookkeepersmc.loader.impl.game.minecraft.Hooks;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 
 /**
  * PLEASE NOTE:
@@ -63,7 +63,7 @@ public class AppletLauncher extends Applet implements AppletStub {
 		params.put("demo", Boolean.toString(demo));
 
 		try {
-			mcApplet = (Applet) FabricLauncherBase.getLauncher()
+			mcApplet = (Applet) NotebookLauncherBase.getLauncher()
 					.getTargetClassLoader()
 					.loadClass(Hooks.appletMainClass)
 					.getDeclaredConstructor()

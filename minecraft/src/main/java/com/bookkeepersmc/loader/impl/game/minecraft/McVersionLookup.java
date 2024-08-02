@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.bookkeepersmc.loader.api.VersionParsingException;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.lib.gson.JsonReader;
 import com.bookkeepersmc.loader.impl.lib.gson.JsonToken;
 import com.bookkeepersmc.loader.impl.util.ExceptionUtil;
@@ -620,7 +620,7 @@ public final class McVersionLookup {
 		private String result;
 
 		FieldStringConstantVisitor(String fieldName) {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 
 			this.fieldName = fieldName;
 		}
@@ -691,7 +691,7 @@ public final class McVersionLookup {
 		private String result;
 
 		MethodStringConstantContainsVisitor(String methodOwner, String methodName) {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 
 			this.methodOwner = methodOwner;
 			this.methodName = methodName;
@@ -745,7 +745,7 @@ public final class McVersionLookup {
 		private String result;
 
 		MethodConstantRetVisitor(String methodName) {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 
 			this.methodName = methodName;
 		}
@@ -807,7 +807,7 @@ public final class McVersionLookup {
 		private boolean foundInMethodHint;
 
 		MethodConstantVisitor(String methodNameHint) {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 
 			this.methodNameHint = methodNameHint;
 		}
@@ -825,7 +825,7 @@ public final class McVersionLookup {
 				return null;
 			}
 
-			return new MethodVisitor(FabricLoaderImpl.ASM_VERSION) {
+			return new MethodVisitor(NotebookLoaderImpl.ASM_VERSION) {
 				@Override
 				public void visitLdcInsn(Object value) {
 					if ((result == null || !foundInMethodHint && isRequestedMethod) && value instanceof String) {
@@ -865,7 +865,7 @@ public final class McVersionLookup {
 
 	private abstract static class InsnFwdMethodVisitor extends MethodVisitor {
 		InsnFwdMethodVisitor() {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 		}
 
 		protected abstract void visitAnyInsn();
@@ -940,7 +940,7 @@ public final class McVersionLookup {
 		private String type;
 
 		FieldTypeCaptureVisitor() {
-			super(FabricLoaderImpl.ASM_VERSION);
+			super(NotebookLoaderImpl.ASM_VERSION);
 		}
 
 		@Override

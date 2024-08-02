@@ -65,17 +65,17 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import com.bookkeepersmc.loader.impl.gui.FabricStatusTree.FabricBasicButtonType;
-import com.bookkeepersmc.loader.impl.gui.FabricStatusTree.FabricStatusButton;
-import com.bookkeepersmc.loader.impl.gui.FabricStatusTree.FabricStatusNode;
-import com.bookkeepersmc.loader.impl.gui.FabricStatusTree.FabricStatusTab;
-import com.bookkeepersmc.loader.impl.gui.FabricStatusTree.FabricTreeWarningLevel;
+import com.bookkeepersmc.loader.impl.gui.NotebookStatusTree.NotebookBasicButtonType;
+import com.bookkeepersmc.loader.impl.gui.NotebookStatusTree.NotebookStatusButton;
+import com.bookkeepersmc.loader.impl.gui.NotebookStatusTree.NotebookStatusNode;
+import com.bookkeepersmc.loader.impl.gui.NotebookStatusTree.NotebookStatusTab;
+import com.bookkeepersmc.loader.impl.gui.NotebookStatusTree.NotebookTreeWarningLevel;
 import com.bookkeepersmc.loader.impl.util.StringUtil;
 
-class FabricMainWindow {
+class NotebookMainWindow {
 	static Icon missingIcon = null;
 
-	static void open(FabricStatusTree tree, boolean shouldWait) throws Exception {
+	static void open(NotebookStatusTree tree, boolean shouldWait) throws Exception {
 		if (GraphicsEnvironment.isHeadless()) {
 			throw new HeadlessException();
 		}
@@ -88,7 +88,7 @@ class FabricMainWindow {
 		open0(tree, shouldWait);
 	}
 
-	private static void open0(FabricStatusTree tree, boolean shouldWait) throws Exception {
+	private static void open0(NotebookStatusTree tree, boolean shouldWait) throws Exception {
 		CountDownLatch guiTerminatedLatch = new CountDownLatch(1);
 
 		SwingUtilities.invokeAndWait(() -> {
@@ -100,7 +100,7 @@ class FabricMainWindow {
 		}
 	}
 
-	private static void createUi(CountDownLatch onCloseLatch, FabricStatusTree tree) {
+	private static void createUi(CountDownLatch onCloseLatch, NotebookStatusTree tree) {
 		JFrame window = new JFrame();
 		window.setVisible(false);
 		window.setTitle(tree.title);
@@ -137,17 +137,17 @@ class FabricMainWindow {
 		IconSet icons = new IconSet();
 
 		if (tree.tabs.isEmpty()) {
-			FabricStatusTab tab = new FabricStatusTab("Opening Errors");
+			NotebookStatusTab tab = new NotebookStatusTab("Opening Errors");
 			tab.addChild("No tabs provided! (Something is very broken)").setError();
 			contentPane.add(createTreePanel(tab.node, tab.filterLevel, icons), BorderLayout.CENTER);
 		} else if (tree.tabs.size() == 1) {
-			FabricStatusTab tab = tree.tabs.get(0);
+			NotebookStatusTab tab = tree.tabs.get(0);
 			contentPane.add(createTreePanel(tab.node, tab.filterLevel, icons), BorderLayout.CENTER);
 		} else {
 			JTabbedPane tabs = new JTabbedPane();
 			contentPane.add(tabs, BorderLayout.CENTER);
 
-			for (FabricStatusTab tab : tree.tabs) {
+			for (NotebookStatusTab tab : tree.tabs) {
 				tabs.addTab(tab.node.name, createTreePanel(tab.node, tab.filterLevel, icons));
 			}
 		}
@@ -157,11 +157,11 @@ class FabricMainWindow {
 			contentPane.add(buttons, BorderLayout.SOUTH);
 			buttons.setLayout(new FlowLayout(FlowLayout.TRAILING));
 
-			for (FabricStatusButton button : tree.buttons) {
+			for (NotebookStatusButton button : tree.buttons) {
 				JButton btn = new JButton(button.text);
 				buttons.add(btn);
 				btn.addActionListener(event -> {
-					if (button.type == FabricBasicButtonType.CLICK_ONCE) btn.setEnabled(false);
+					if (button.type == NotebookBasicButtonType.CLICK_ONCE) btn.setEnabled(false);
 
 					if (button.clipboard != null) {
 						try {
@@ -188,8 +188,8 @@ class FabricMainWindow {
 		window.requestFocus();
 	}
 
-	private static JPanel createTreePanel(FabricStatusNode rootNode, FabricTreeWarningLevel minimumWarningLevel,
-			IconSet iconSet) {
+	private static JPanel createTreePanel(NotebookStatusNode rootNode, NotebookTreeWarningLevel minimumWarningLevel,
+										  IconSet iconSet) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -226,7 +226,7 @@ class FabricMainWindow {
 	}
 
 	private static InputStream loadStream(String str) throws FileNotFoundException {
-		InputStream stream = FabricMainWindow.class.getResourceAsStream(str);
+		InputStream stream = NotebookMainWindow.class.getResourceAsStream(str);
 
 		if (stream == null) {
 			throw new FileNotFoundException(str);
@@ -358,7 +358,7 @@ class FabricMainWindow {
 			}
 		}
 
-		public static IconInfo fromNode(FabricStatusNode node) {
+		public static IconInfo fromNode(NotebookStatusNode node) {
 			String[] split = node.iconType.split("\\+");
 
 			if (split.length == 1 && split[0].isEmpty()) {
@@ -367,11 +367,11 @@ class FabricMainWindow {
 
 			final String main;
 			List<String> decors = new ArrayList<>();
-			FabricTreeWarningLevel warnLevel = node.getMaximumWarningLevel();
+			NotebookTreeWarningLevel warnLevel = node.getMaximumWarningLevel();
 
 			if (split.length == 0) {
 				// Empty string, but we might replace it with a warning
-				if (warnLevel == FabricTreeWarningLevel.NONE) {
+				if (warnLevel == NotebookTreeWarningLevel.NONE) {
 					main = "missing";
 				} else {
 					main = "level_" + warnLevel.lowerCaseName;
@@ -379,7 +379,7 @@ class FabricMainWindow {
 			} else {
 				main = split[0];
 
-				if (warnLevel == FabricTreeWarningLevel.NONE) {
+				if (warnLevel == NotebookTreeWarningLevel.NONE) {
 					// Just to add a gap
 					decors.add(null);
 				} else {
@@ -461,15 +461,15 @@ class FabricMainWindow {
 
 	static class CustomTreeNode implements TreeNode {
 		public final TreeNode parent;
-		public final FabricStatusNode node;
+		public final NotebookStatusNode node;
 		public final List<CustomTreeNode> displayedChildren = new ArrayList<>();
 		private IconInfo iconInfo;
 
-		CustomTreeNode(TreeNode parent, FabricStatusNode node, FabricTreeWarningLevel minimumWarningLevel) {
+		CustomTreeNode(TreeNode parent, NotebookStatusNode node, NotebookTreeWarningLevel minimumWarningLevel) {
 			this.parent = parent;
 			this.node = node;
 
-			for (FabricStatusNode c : node.children) {
+			for (NotebookStatusNode c : node.children) {
 				if (minimumWarningLevel.isHigherThan(c.getMaximumWarningLevel())) {
 					continue;
 				}

@@ -39,9 +39,9 @@ import java.util.jar.Manifest;
 
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.launch.knot.KnotClassDelegate.ClassLoaderAccess;
-import com.bookkeepersmc.loader.impl.transformer.FabricTransformer;
+import com.bookkeepersmc.loader.impl.transformer.NotebookTransformer;
 import com.bookkeepersmc.loader.impl.util.ExceptionUtil;
 import com.bookkeepersmc.loader.impl.util.FileSystemUtil;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
@@ -394,7 +394,7 @@ final class KnotClassDelegate<T extends ClassLoader & ClassLoaderAccess> impleme
 					} */
 				}
 			} catch (IOException | FileSystemNotFoundException e) {
-				if (FabricLauncherBase.getLauncher().isDevelopment()) {
+				if (NotebookLauncherBase.getLauncher().isDevelopment()) {
 					Log.warn(LogCategory.KNOT, "Failed to load manifest", e);
 				}
 			}
@@ -459,7 +459,7 @@ final class KnotClassDelegate<T extends ClassLoader & ClassLoaderAccess> impleme
 		}
 
 		if (input != null) {
-			return FabricTransformer.transform(isDevelopment, envType, name, input);
+			return NotebookTransformer.transform(isDevelopment, envType, name, input);
 		}
 
 		return null;

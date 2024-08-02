@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.api.FabricLoader;
+import com.bookkeepersmc.loader.api.NotebookLoader;
 import com.bookkeepersmc.loader.impl.game.patch.GamePatch;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -46,7 +46,7 @@ public final class TinyFDPatch extends GamePatch {
 	private static final String DIALOG_TITLE = "Select settings file (.json)";
 
 	@Override
-	public void process(FabricLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
+	public void process(NotebookLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
 		if (launcher.getEnvironmentType() != EnvType.CLIENT) {
 			// Fix should only be applied to clients.
 			return;
@@ -56,8 +56,8 @@ public final class TinyFDPatch extends GamePatch {
 
 		// Only remap the classname when needed to prevent loading the mappings when not required in prod.
 		if (!launcher.getMappingConfiguration().getTargetNamespace().equals("intermediary")
-				&& FabricLoader.getInstance().getMappingResolver().getNamespaces().contains("intermediary")) {
-			className = FabricLoader.getInstance().getMappingResolver().mapClassName("intermediary", MORE_OPTIONS_DIALOG_CLASS_NAME);
+				&& NotebookLoader.getInstance().getMappingResolver().getNamespaces().contains("intermediary")) {
+			className = NotebookLoader.getInstance().getMappingResolver().mapClassName("intermediary", MORE_OPTIONS_DIALOG_CLASS_NAME);
 		}
 
 		final ClassNode classNode = classSource.apply(className);

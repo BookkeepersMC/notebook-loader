@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 import com.bookkeepersmc.loader.impl.game.minecraft.Hooks;
 import com.bookkeepersmc.loader.impl.game.patch.GamePatch;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
@@ -34,7 +34,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 public final class BrandingPatch extends GamePatch {
 	@Override
-	public void process(FabricLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
+	public void process(NotebookLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
 		for (String brandClassName : new String[] {
 				"net.minecraft.client.ClientBrandRetriever",
 				"net.minecraft.server.MinecraftServer"

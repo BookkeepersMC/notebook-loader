@@ -16,9 +16,11 @@
 
 package net.fabricmc.loader.launch;
 
+import com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.NotebookClientTweaker;
+
 /**
- * @deprecated Use {@link com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.FabricClientTweaker} instead
+ * @deprecated Use {@link NotebookClientTweaker} instead
  */
 @Deprecated
-public final class FabricClientTweaker extends com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper.FabricClientTweaker {
+public final class FabricClientTweaker extends NotebookClientTweaker {
 }

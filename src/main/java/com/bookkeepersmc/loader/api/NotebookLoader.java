@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.api.entrypoint.EntrypointContainer;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 
 /**
  * The public-facing FabricLoader instance.
@@ -34,15 +34,15 @@ import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
  *
  * @since 0.4.0
  */
-public interface FabricLoader {
+public interface NotebookLoader {
 	/**
 	 * Returns the public-facing Fabric Loader instance.
 	 */
-	static FabricLoader getInstance() {
-		FabricLoader ret = FabricLoaderImpl.INSTANCE;
+	static NotebookLoader getInstance() {
+		NotebookLoader ret = NotebookLoaderImpl.INSTANCE;
 
 		if (ret == null) {
-			throw new RuntimeException("Accessed FabricLoader too early!");
+			throw new RuntimeException("Accessed Loader too early!");
 		}
 
 		return ret;

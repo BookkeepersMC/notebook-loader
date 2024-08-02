@@ -16,12 +16,14 @@
 
 package net.fabricmc.loader.launch.server;
 
+import com.bookkeepersmc.loader.impl.launch.server.NotebookServerLauncher;
+
 /**
  * @deprecated Use {@link net.fabricmc.loader.impl.launch.server.FabricServerLauncher} instead
  */
 @Deprecated
 public final class FabricServerLauncher {
 	public static void main(String[] args) {
-		com.bookkeepersmc.loader.impl.launch.server.FabricServerLauncher.main(args);
+		NotebookServerLauncher.main(args);
 	}
 }

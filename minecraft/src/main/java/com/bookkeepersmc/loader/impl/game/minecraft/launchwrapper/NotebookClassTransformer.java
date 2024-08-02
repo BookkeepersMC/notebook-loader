@@ -19,23 +19,23 @@ package com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
-import com.bookkeepersmc.loader.impl.transformer.FabricTransformer;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
+import com.bookkeepersmc.loader.impl.transformer.NotebookTransformer;
 
-public class FabricClassTransformer implements IClassTransformer {
+public class NotebookClassTransformer implements IClassTransformer {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] bytes) {
-		boolean isDevelopment = FabricLauncherBase.getLauncher().isDevelopment();
-		EnvType envType = FabricLauncherBase.getLauncher().getEnvironmentType();
+		boolean isDevelopment = NotebookLauncherBase.getLauncher().isDevelopment();
+		EnvType envType = NotebookLauncherBase.getLauncher().getEnvironmentType();
 
-		byte[] input = FabricLoaderImpl.INSTANCE.getGameProvider().getEntrypointTransformer().transform(name);
+		byte[] input = NotebookLoaderImpl.INSTANCE.getGameProvider().getEntrypointTransformer().transform(name);
 
 		if (input != null) {
-			return FabricTransformer.transform(isDevelopment, envType, name, input);
+			return NotebookTransformer.transform(isDevelopment, envType, name, input);
 		} else {
 			if (bytes != null) {
-				return FabricTransformer.transform(isDevelopment, envType, name, bytes);
+				return NotebookTransformer.transform(isDevelopment, envType, name, bytes);
 			} else {
 				return null;
 			}

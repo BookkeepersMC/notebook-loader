@@ -17,12 +17,13 @@
 package com.bookkeepersmc.loader.api.entrypoint;
 
 import com.bookkeepersmc.loader.api.ModContainer;
+import com.bookkeepersmc.loader.api.NotebookLoader;
 
 /**
  * A container holding both an entrypoint instance and the {@link ModContainer} which has provided the entrypoint.
  *
  * @param <T> The type of the entrypoint
- * @see com.bookkeepersmc.loader.api.FabricLoader#getEntrypointContainers(String, Class)
+ * @see NotebookLoader#getEntrypointContainers(String, Class)
  */
 public interface EntrypointContainer<T> {
 	/**

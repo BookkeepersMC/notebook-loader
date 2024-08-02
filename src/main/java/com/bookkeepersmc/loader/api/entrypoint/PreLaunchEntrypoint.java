@@ -16,6 +16,8 @@
 
 package com.bookkeepersmc.loader.api.entrypoint;
 
+import com.bookkeepersmc.loader.api.NotebookLoader;
+
 /**
  * Entrypoint getting invoked just before launching the game.
  *
@@ -27,7 +29,7 @@ package com.bookkeepersmc.loader.api.entrypoint;
  * <p>The entrypoint is exposed with {@code preLaunch} key in the mod json and runs for any environment. It usually
  * executes several seconds before the {@code main}/{@code client}/{@code server} entrypoints.
  *
- * @see com.bookkeepersmc.loader.api.FabricLoader#getEntrypointContainers(String, Class)
+ * @see NotebookLoader#getEntrypointContainers(String, Class)
  */
 @FunctionalInterface
 public interface PreLaunchEntrypoint {

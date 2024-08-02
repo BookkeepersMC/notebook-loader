@@ -33,8 +33,8 @@ import com.bookkeepersmc.loader.impl.launch.knot.KnotServer;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.SystemProperties;
 
-public class FabricServerLauncher {
-	private static final ClassLoader parentLoader = FabricServerLauncher.class.getClassLoader();
+public class NotebookServerLauncher {
+	private static final ClassLoader parentLoader = NotebookServerLauncher.class.getClassLoader();
 	private static String mainClass = KnotServer.class.getName();
 
 	public static void main(String[] args) {

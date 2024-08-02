@@ -41,12 +41,12 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
 import com.bookkeepersmc.loader.impl.game.minecraft.MinecraftGameProvider;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
-import com.bookkeepersmc.loader.impl.launch.FabricMixinBootstrap;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookMixinBootstrap;
 import com.bookkeepersmc.loader.impl.util.Arguments;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.ManifestUtil;
@@ -59,7 +59,7 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.transformer.Proxy;
 
-public abstract class FabricTweaker extends FabricLauncherBase implements ITweaker {
+public abstract class NotebookTweaker extends NotebookLauncherBase implements ITweaker {
 	private static final LogCategory LOG_CATEGORY = LogCategory.create("GameProvider", "Tweaker");
 	protected Arguments arguments;
 	private LaunchClassLoader launchClassLoader;
@@ -143,17 +143,17 @@ public abstract class FabricTweaker extends FabricLauncherBase implements ITweak
 
 		provider.initialize(this);
 
-		FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
+		NotebookLoaderImpl loader = NotebookLoaderImpl.INSTANCE;
 		loader.setGameProvider(provider);
 		loader.load();
 		loader.freeze();
 
-		launchClassLoader.registerTransformer(FabricClassTransformer.class.getName());
-		FabricLoaderImpl.INSTANCE.loadAccessWideners();
+		launchClassLoader.registerTransformer(NotebookClassTransformer.class.getName());
+		NotebookLoaderImpl.INSTANCE.loadAccessWideners();
 
 		// Setup Mixin environment
 		MixinBootstrap.init();
-		FabricMixinBootstrap.init(getEnvironmentType(), FabricLoaderImpl.INSTANCE);
+		NotebookMixinBootstrap.init(getEnvironmentType(), NotebookLoaderImpl.INSTANCE);
 		MixinEnvironment.getDefaultEnvironment().setSide(getEnvironmentType() == EnvType.CLIENT ? MixinEnvironment.Side.CLIENT : MixinEnvironment.Side.SERVER);
 
 		provider.unlockClassPath(this);
@@ -167,7 +167,7 @@ public abstract class FabricTweaker extends FabricLauncherBase implements ITweak
 
 	@Override
 	public String[] getLaunchArguments() {
-		return isPrimaryTweaker ? FabricLoaderImpl.INSTANCE.getGameProvider().getLaunchArguments(false) : new String[0];
+		return isPrimaryTweaker ? NotebookLoaderImpl.INSTANCE.getGameProvider().getLaunchArguments(false) : new String[0];
 	}
 
 	@Override

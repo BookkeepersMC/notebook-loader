@@ -29,7 +29,7 @@ import com.bookkeepersmc.loader.api.VersionParsingException;
 import com.bookkeepersmc.loader.api.metadata.ModDependency;
 import com.bookkeepersmc.loader.api.metadata.ModDependency.Kind;
 import com.bookkeepersmc.loader.api.metadata.version.VersionInterval;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.ModContainerImpl;
 import com.bookkeepersmc.loader.impl.launch.knot.MixinServiceKnot;
 import com.bookkeepersmc.loader.impl.launch.knot.MixinServiceKnotBootstrap;
@@ -45,12 +45,12 @@ import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfig;
 import org.spongepowered.asm.mixin.transformer.Config;
 
-public final class FabricMixinBootstrap {
-	private FabricMixinBootstrap() { }
+public final class NotebookMixinBootstrap {
+	private NotebookMixinBootstrap() { }
 
 	private static boolean initialized = false;
 
-	public static void init(EnvType side, FabricLoaderImpl loader) {
+	public static void init(EnvType side, NotebookLoaderImpl loader) {
 		if (initialized) {
 			throw new RuntimeException("FabricMixinBootstrap has already been initialized!");
 		}
@@ -60,8 +60,8 @@ public final class FabricMixinBootstrap {
 
 		MixinBootstrap.init();
 
-		if (FabricLauncherBase.getLauncher().isDevelopment()) {
-			MappingConfiguration mappingConfiguration = FabricLauncherBase.getLauncher().getMappingConfiguration();
+		if (NotebookLauncherBase.getLauncher().isDevelopment()) {
+			MappingConfiguration mappingConfiguration = NotebookLauncherBase.getLauncher().getMappingConfiguration();
 			MappingTree mappings = mappingConfiguration.getMappings();
 
 			if (mappings != null) {

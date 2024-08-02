@@ -88,7 +88,7 @@ public final class MappingConfiguration {
 	}
 
 	public String getTargetNamespace() {
-		return FabricLauncherBase.getLauncher().isDevelopment() ? "named" : "intermediary";
+		return NotebookLauncherBase.getLauncher().isDevelopment() ? "named" : "intermediary";
 	}
 
 	public boolean requiresPackageAccessHack() {

@@ -37,17 +37,16 @@ import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.api.ObjectShare;
 import com.bookkeepersmc.loader.api.VersionParsingException;
 import com.bookkeepersmc.loader.api.metadata.ModDependency;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
 import com.bookkeepersmc.loader.impl.game.GameProviderHelper;
 import com.bookkeepersmc.loader.impl.game.LibClassifier;
 import com.bookkeepersmc.loader.impl.game.minecraft.patch.BrandingPatch;
 import com.bookkeepersmc.loader.impl.game.minecraft.patch.EntrypointPatch;
-import com.bookkeepersmc.loader.impl.game.minecraft.patch.EntrypointPatchFML125;
 import com.bookkeepersmc.loader.impl.game.minecraft.patch.TinyFDPatch;
 import com.bookkeepersmc.loader.impl.game.patch.GameTransformer;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.metadata.BuiltinModMetadata;
 import com.bookkeepersmc.loader.impl.metadata.ModDependencyImpl;
 import com.bookkeepersmc.loader.impl.util.Arguments;
@@ -89,7 +88,6 @@ public class MinecraftGameProvider implements GameProvider {
 	private final GameTransformer transformer = new GameTransformer(
 			new EntrypointPatch(this),
 			new BrandingPatch(),
-			new EntrypointPatchFML125(),
 			new TinyFDPatch());
 
 	@Override
@@ -164,7 +162,7 @@ public class MinecraftGameProvider implements GameProvider {
 	}
 
 	@Override
-	public boolean locateGame(FabricLauncher launcher, String[] args) {
+	public boolean locateGame(NotebookLauncher launcher, String[] args) {
 		this.envType = launcher.getEnvironmentType();
 		this.arguments = new Arguments();
 		arguments.parse(args);
@@ -241,7 +239,7 @@ public class MinecraftGameProvider implements GameProvider {
 		}
 
 		// expose obfuscated jar locations for mods to more easily remap code from obfuscated to intermediary
-		ObjectShare share = FabricLoaderImpl.INSTANCE.getObjectShare();
+		ObjectShare share = NotebookLoaderImpl.INSTANCE.getObjectShare();
 		share.put("fabric-loader:inputGameJar", gameJars.get(0)); // deprecated
 		share.put("fabric-loader:inputGameJars", Collections.unmodifiableList(new ArrayList<>(gameJars))); // need to make copy as gameJars is later mutated to hold the remapped jars
 		if (realmsJar != null) share.put("fabric-loader:inputRealmsJar", realmsJar);
@@ -259,11 +257,11 @@ public class MinecraftGameProvider implements GameProvider {
 		switch (envType) {
 		case CLIENT:
 			if (!argMap.containsKey("accessToken")) {
-				argMap.put("accessToken", "FabricMC");
+				argMap.put("accessToken", "BookkeepersMC");
 			}
 
 			if (!argMap.containsKey("version")) {
-				argMap.put("version", "Fabric");
+				argMap.put("version", "Notebook");
 			}
 
 			String versionType = "";
@@ -272,7 +270,7 @@ public class MinecraftGameProvider implements GameProvider {
 				versionType = argMap.get("versionType") + "/";
 			}
 
-			argMap.put("versionType", versionType + "Fabric");
+			argMap.put("versionType", versionType + "Notebook Loader " + NotebookLoaderImpl.VERSION);
 
 			if (!argMap.containsKey("gameDir")) {
 				argMap.put("gameDir", getLaunchDirectory(argMap).toAbsolutePath().normalize().toString());
@@ -292,7 +290,7 @@ public class MinecraftGameProvider implements GameProvider {
 	}
 
 	@Override
-	public void initialize(FabricLauncher launcher) {
+	public void initialize(NotebookLauncher launcher) {
 		launcher.setValidParentClassPath(validParentClassPath);
 
 		if (isObfuscated()) {
@@ -349,7 +347,7 @@ public class MinecraftGameProvider implements GameProvider {
 		transformer.locateEntrypoints(launcher, gameJars);
 	}
 
-	private void setupLogHandler(FabricLauncher launcher, boolean useTargetCl) {
+	private void setupLogHandler(NotebookLauncher launcher, boolean useTargetCl) {
 		System.setProperty("log4j2.formatMsgNoLookups", "true"); // lookups are not used by mc and cause issues with older log4j2 versions
 
 		try {
@@ -433,7 +431,7 @@ public class MinecraftGameProvider implements GameProvider {
 	}
 
 	@Override
-	public void unlockClassPath(FabricLauncher launcher) {
+	public void unlockClassPath(NotebookLauncher launcher) {
 		for (Path gameJar : gameJars) {
 			if (logJars.contains(gameJar)) {
 				launcher.setAllowedPrefixes(gameJar);

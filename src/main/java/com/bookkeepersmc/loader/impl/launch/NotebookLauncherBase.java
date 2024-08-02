@@ -22,23 +22,23 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
-import com.bookkeepersmc.loader.impl.gui.FabricGuiEntry;
+import com.bookkeepersmc.loader.impl.gui.NotebookGuiEntry;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
 import org.jetbrains.annotations.VisibleForTesting;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
-public abstract class FabricLauncherBase implements FabricLauncher {
+public abstract class NotebookLauncherBase implements NotebookLauncher {
 	private static boolean mixinReady;
 	private static Map<String, Object> properties;
-	private static FabricLauncher launcher;
+	private static NotebookLauncher launcher;
 	private static MappingConfiguration mappingConfiguration = new MappingConfiguration();
 
-	protected FabricLauncherBase() {
+	protected NotebookLauncherBase() {
 		setLauncher(this);
 	}
 
@@ -60,7 +60,7 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 	}
 
 	@VisibleForTesting
-	public static void setLauncher(FabricLauncher launcherA) {
+	public static void setLauncher(NotebookLauncher launcherA) {
 		if (launcher != null && launcher != launcherA) {
 			throw new RuntimeException("Duplicate setLauncher call!");
 		}
@@ -68,7 +68,7 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 		launcher = launcherA;
 	}
 
-	public static FabricLauncher getLauncher() {
+	public static NotebookLauncher getLauncher() {
 		return launcher;
 	}
 
@@ -80,10 +80,10 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 		Throwable actualExc = exc.getMessage() != null ? exc : exc.getCause();
 		Log.error(LogCategory.GENERAL, exc.getMainText(), actualExc);
 
-		GameProvider gameProvider = FabricLoaderImpl.INSTANCE.tryGetGameProvider();
+		GameProvider gameProvider = NotebookLoaderImpl.INSTANCE.tryGetGameProvider();
 
 		if (gameProvider == null || !gameProvider.displayCrash(actualExc, exc.getDisplayedText())) {
-			FabricGuiEntry.displayError(exc.getDisplayedText(), actualExc, true);
+			NotebookGuiEntry.displayError(exc.getDisplayedText(), actualExc, true);
 		} else {
 			System.exit(1);
 		}
@@ -103,11 +103,11 @@ public abstract class FabricLauncherBase implements FabricLauncher {
 						String mainText = String.format("Uncaught exception in thread \"%s\"", t.getName());
 						Log.error(LogCategory.GENERAL, mainText, e);
 
-						GameProvider gameProvider = FabricLoaderImpl.INSTANCE.tryGetGameProvider();
+						GameProvider gameProvider = NotebookLoaderImpl.INSTANCE.tryGetGameProvider();
 
 						if (Thread.currentThread() == mainThread
 								&& (gameProvider == null || !gameProvider.displayCrash(e, mainText))) {
-							FabricGuiEntry.displayError(mainText, e, false);
+							NotebookGuiEntry.displayError(mainText, e, false);
 						}
 					}
 				} catch (Throwable e2) { // just in case

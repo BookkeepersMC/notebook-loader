@@ -28,7 +28,7 @@ import com.bookkeepersmc.loader.api.metadata.version.VersionPredicate;
 import com.bookkeepersmc.loader.impl.game.minecraft.Hooks;
 import com.bookkeepersmc.loader.impl.game.minecraft.MinecraftGameProvider;
 import com.bookkeepersmc.loader.impl.game.patch.GamePatch;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 import com.bookkeepersmc.loader.impl.util.version.VersionPredicateParser;
@@ -60,7 +60,7 @@ public class EntrypointPatch extends GamePatch {
 	}
 
 	@Override
-	public void process(FabricLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
+	public void process(NotebookLauncher launcher, Function<String, ClassNode> classSource, Consumer<ClassNode> classEmitter) {
 		EnvType type = launcher.getEnvironmentType();
 		String entrypoint = launcher.getEntrypoint();
 		Version gameVersion = getGameVersion();

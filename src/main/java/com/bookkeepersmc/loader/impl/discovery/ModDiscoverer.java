@@ -49,7 +49,7 @@ import java.util.zip.ZipInputStream;
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.api.SemanticVersion;
 import com.bookkeepersmc.loader.api.metadata.ModMetadata;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
 import com.bookkeepersmc.loader.impl.discovery.ModCandidateFinder.ModCandidateConsumer;
 import com.bookkeepersmc.loader.impl.game.GameProvider.BuiltinMod;
@@ -71,7 +71,7 @@ public final class ModDiscoverer {
 	private final VersionOverrides versionOverrides;
 	private final DependencyOverrides depOverrides;
 	private final List<ModCandidateFinder> candidateFinders = new ArrayList<>();
-	private final EnvType envType = FabricLoaderImpl.INSTANCE.getEnvironmentType();
+	private final EnvType envType = NotebookLoaderImpl.INSTANCE.getEnvironmentType();
 	private final Map<Long, ModScanTask> jijDedupMap = new ConcurrentHashMap<>(); // avoids reading the same jar twice
 	private final List<NestedModInitData> nestedModInitDatas = Collections.synchronizedList(new ArrayList<>()); // breaks potential cycles from deduplication
 	private final List<Path> nonNotebookMods = Collections.synchronizedList(new ArrayList<>());
@@ -85,7 +85,7 @@ public final class ModDiscoverer {
 		candidateFinders.add(f);
 	}
 
-	public List<ModCandidate> discoverMods(FabricLoaderImpl loader, Map<String, Set<ModCandidate>> envDisabledModsOut) throws ModResolutionException {
+	public List<ModCandidate> discoverMods(NotebookLoaderImpl loader, Map<String, Set<ModCandidate>> envDisabledModsOut) throws ModResolutionException {
 		long startTime = System.nanoTime();
 		ForkJoinPool pool = new ForkJoinPool();
 		Set<Path> processedPaths = new HashSet<>(); // suppresses duplicate paths
@@ -377,7 +377,7 @@ public final class ModDiscoverer {
 						private ZipEntry currentEntry;
 					});
 
-					if (!nestedJarPaths.isEmpty() && FabricLoaderImpl.INSTANCE.isDevelopmentEnvironment()) {
+					if (!nestedJarPaths.isEmpty() && NotebookLoaderImpl.INSTANCE.isDevelopmentEnvironment()) {
 						Log.warn(LogCategory.METADATA, "Mod %s %s references missing nested jars: %s", metadata.getId(), metadata.getVersion(), nestedJarPaths);
 					}
 				}
@@ -455,7 +455,7 @@ public final class ModDiscoverer {
 					});
 				}
 
-				if (!nestedJarPaths.isEmpty() && FabricLoaderImpl.INSTANCE.isDevelopmentEnvironment()) {
+				if (!nestedJarPaths.isEmpty() && NotebookLoaderImpl.INSTANCE.isDevelopmentEnvironment()) {
 					Log.warn(LogCategory.METADATA, "Mod %s %s references missing nested jars: %s", metadata.getId(), metadata.getVersion(), nestedJarPaths);
 				}
 			}
@@ -512,7 +512,7 @@ public final class ModDiscoverer {
 		}
 
 		private LoaderModMetadata parseMetadata(InputStream is, String localPath) throws ParseMetadataException {
-			return ModMetadataParser.parseMetadata(is, localPath, parentPaths, versionOverrides, depOverrides, FabricLoaderImpl.INSTANCE.isDevelopmentEnvironment());
+			return ModMetadataParser.parseMetadata(is, localPath, parentPaths, versionOverrides, depOverrides, NotebookLoaderImpl.INSTANCE.isDevelopmentEnvironment());
 		}
 	}
 

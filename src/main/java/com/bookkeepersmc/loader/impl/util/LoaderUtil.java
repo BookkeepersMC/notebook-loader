@@ -58,11 +58,11 @@ public final class LoaderUtil {
 
 	public static void verifyClasspath() {
 		try {
-			final List<URL> resources = Collections.list(LoaderUtil.class.getClassLoader().getResources("com/bookkeepersmc/loader/api/FabricLoader.class"));
+			final List<URL> resources = Collections.list(LoaderUtil.class.getClassLoader().getResources("com/bookkeepersmc/loader/api/NotebookLoader.class"));
 
 			if (resources.size() != 1) {
 				// This usually happens when fabric loader has been added to the classpath more than once.
-				throw new IllegalStateException("duplicate fabric loader classes found on classpath: " + resources.stream().map(URL::toString).collect(Collectors.joining(", ")));
+				throw new IllegalStateException("duplicate loader classes found on classpath: " + resources.stream().map(URL::toString).collect(Collectors.joining(", ")));
 			}
 		} catch (IOException e) {
 			throw new UncheckedIOException("Failed to get resources", e);

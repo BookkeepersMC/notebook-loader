@@ -17,20 +17,20 @@
 package com.bookkeepersmc.loader.impl.transformer;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 
 import net.fabricmc.accesswidener.AccessWidenerClassVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-public final class FabricTransformer {
+public final class NotebookTransformer {
 	public static byte[] transform(boolean isDevelopment, EnvType envType, String name, byte[] bytes) {
 		boolean isMinecraftClass = name.startsWith("net.minecraft.") || name.startsWith("com.mojang.blaze3d.") || name.indexOf('.') < 0;
-		boolean transformAccess = isMinecraftClass && FabricLauncherBase.getLauncher().getMappingConfiguration().requiresPackageAccessHack();
+		boolean transformAccess = isMinecraftClass && NotebookLauncherBase.getLauncher().getMappingConfiguration().requiresPackageAccessHack();
 		boolean environmentStrip = !isMinecraftClass || isDevelopment;
-		boolean applyAccessWidener = isMinecraftClass && FabricLoaderImpl.INSTANCE.getAccessWidener().getTargets().contains(name);
+		boolean applyAccessWidener = isMinecraftClass && NotebookLoaderImpl.INSTANCE.getAccessWidener().getTargets().contains(name);
 
 		if (!transformAccess && !environmentStrip && !applyAccessWidener) {
 			return bytes;
@@ -42,17 +42,17 @@ public final class FabricTransformer {
 		int visitorCount = 0;
 
 		if (applyAccessWidener) {
-			visitor = AccessWidenerClassVisitor.createClassVisitor(FabricLoaderImpl.ASM_VERSION, visitor, FabricLoaderImpl.INSTANCE.getAccessWidener());
+			visitor = AccessWidenerClassVisitor.createClassVisitor(NotebookLoaderImpl.ASM_VERSION, visitor, NotebookLoaderImpl.INSTANCE.getAccessWidener());
 			visitorCount++;
 		}
 
 		if (transformAccess) {
-			visitor = new PackageAccessFixer(FabricLoaderImpl.ASM_VERSION, visitor);
+			visitor = new PackageAccessFixer(NotebookLoaderImpl.ASM_VERSION, visitor);
 			visitorCount++;
 		}
 
 		if (environmentStrip) {
-			EnvironmentStrippingData stripData = new EnvironmentStrippingData(FabricLoaderImpl.ASM_VERSION, envType.toString());
+			EnvironmentStrippingData stripData = new EnvironmentStrippingData(NotebookLoaderImpl.ASM_VERSION, envType.toString());
 			classReader.accept(stripData, ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
 
 			if (stripData.stripEntireClass()) {
@@ -60,7 +60,7 @@ public final class FabricTransformer {
 			}
 
 			if (!stripData.isEmpty()) {
-				visitor = new ClassStripper(FabricLoaderImpl.ASM_VERSION, visitor, stripData.getStripInterfaces(), stripData.getStripFields(), stripData.getStripMethods());
+				visitor = new ClassStripper(NotebookLoaderImpl.ASM_VERSION, visitor, stripData.getStripInterfaces(), stripData.getStripFields(), stripData.getStripMethods());
 				visitorCount++;
 			}
 		}

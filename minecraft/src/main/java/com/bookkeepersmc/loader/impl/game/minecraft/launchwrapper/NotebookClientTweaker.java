@@ -18,14 +18,14 @@ package com.bookkeepersmc.loader.impl.game.minecraft.launchwrapper;
 
 import com.bookkeepersmc.api.EnvType;
 
-public class FabricServerTweaker extends FabricTweaker {
+public class NotebookClientTweaker extends NotebookTweaker {
 	@Override
 	public EnvType getEnvironmentType() {
-		return EnvType.SERVER;
+		return EnvType.CLIENT;
 	}
 
 	@Override
 	public String getLaunchTarget() {
-		return "net.minecraft.server.MinecraftServer";
+		return "net.minecraft.client.main.Main";
 	}
 }

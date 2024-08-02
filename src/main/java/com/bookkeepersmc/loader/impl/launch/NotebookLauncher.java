@@ -25,7 +25,7 @@ import java.util.jar.Manifest;
 
 import com.bookkeepersmc.api.EnvType;
 
-public interface FabricLauncher {
+public interface NotebookLauncher {
 	MappingConfiguration getMappingConfiguration();
 
 	void addToClassPath(Path path, String... allowedPrefixes);

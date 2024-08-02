@@ -38,8 +38,8 @@ import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
 import com.bookkeepersmc.loader.impl.FormattedException;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.util.FileSystemUtil;
 import com.bookkeepersmc.loader.impl.util.ManifestUtil;
 import com.bookkeepersmc.loader.impl.util.SystemProperties;
@@ -73,7 +73,7 @@ public final class RuntimeModRemapper {
 
 		if (modsToRemap.isEmpty()) return;
 
-		FabricLauncher launcher = FabricLauncherBase.getLauncher();
+		NotebookLauncher launcher = NotebookLauncherBase.getLauncher();
 
 		TinyRemapper remapper = TinyRemapper.newRemapper()
 				.withMappings(TinyRemapperMappingsHelper.create(launcher.getMappingConfiguration().getMappings(), "intermediary", launcher.getTargetNamespace()))

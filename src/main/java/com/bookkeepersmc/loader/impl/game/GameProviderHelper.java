@@ -36,9 +36,9 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipFile;
 
 import com.bookkeepersmc.api.EnvType;
-import com.bookkeepersmc.loader.impl.FabricLoaderImpl;
+import com.bookkeepersmc.loader.impl.NotebookLoaderImpl;
 import com.bookkeepersmc.loader.impl.FormattedException;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.launch.MappingConfiguration;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.SystemProperties;
@@ -156,7 +156,7 @@ public final class GameProviderHelper {
 
 	private static boolean emittedInfo = false;
 
-	public static Map<String, Path> deobfuscate(Map<String, Path> inputFileMap, String gameId, String gameVersion, Path gameDir, FabricLauncher launcher) {
+	public static Map<String, Path> deobfuscate(Map<String, Path> inputFileMap, String gameId, String gameVersion, Path gameDir, NotebookLauncher launcher) {
 		Log.debug(LogCategory.GAME_REMAP, "Requesting deobfuscation of %s", inputFileMap);
 
 		if (launcher.isDevelopment()) { // in-dev is already deobfuscated
@@ -249,7 +249,7 @@ public final class GameProviderHelper {
 	}
 
 	private static Path getDeobfJarDir(Path gameDir, String gameId, String gameVersion) {
-		Path ret = gameDir.resolve(FabricLoaderImpl.CACHE_DIR_NAME).resolve(FabricLoaderImpl.REMAPPED_JARS_DIR_NAME);
+		Path ret = gameDir.resolve(NotebookLoaderImpl.CACHE_DIR_NAME).resolve(NotebookLoaderImpl.REMAPPED_JARS_DIR_NAME);
 		StringBuilder versionDirName = new StringBuilder();
 
 		if (!gameId.isEmpty()) {
@@ -262,12 +262,12 @@ public final class GameProviderHelper {
 		}
 
 		if (versionDirName.length() > 0) versionDirName.append('-');
-		versionDirName.append(FabricLoaderImpl.VERSION);
+		versionDirName.append(NotebookLoaderImpl.VERSION);
 
 		return ret.resolve(versionDirName.toString().replaceAll("[^\\w\\-\\. ]+", "_"));
 	}
 
-	private static void deobfuscate0(List<Path> inputFiles, List<Path> outputFiles, List<Path> tmpFiles, MappingTree mappings, String targetNamespace, FabricLauncher launcher) throws IOException {
+	private static void deobfuscate0(List<Path> inputFiles, List<Path> outputFiles, List<Path> tmpFiles, MappingTree mappings, String targetNamespace, NotebookLauncher launcher) throws IOException {
 		TinyRemapper remapper = TinyRemapper.newRemapper()
 				.withMappings(TinyRemapperMappingsHelper.create(mappings, "official", targetNamespace))
 				.rebuildSourceFilenames(true)

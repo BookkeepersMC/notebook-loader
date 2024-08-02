@@ -28,7 +28,7 @@ import com.bookkeepersmc.loader.api.LanguageAdapter;
 import com.bookkeepersmc.loader.api.LanguageAdapterException;
 import com.bookkeepersmc.loader.api.entrypoint.EntrypointContainer;
 import com.bookkeepersmc.loader.impl.ModContainerImpl;
-import com.bookkeepersmc.loader.impl.launch.FabricLauncherBase;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncherBase;
 import com.bookkeepersmc.loader.impl.metadata.EntrypointMetadata;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
@@ -67,7 +67,7 @@ public final class EntrypointStorage {
 		@Override
 		public synchronized <T> T getOrCreate(Class<T> type) throws Exception {
 			if (object == null) {
-				net.fabricmc.loader.language.LanguageAdapter adapter = (net.fabricmc.loader.language.LanguageAdapter) Class.forName(languageAdapter, true, FabricLauncherBase.getLauncher().getTargetClassLoader()).getConstructor().newInstance();
+				net.fabricmc.loader.language.LanguageAdapter adapter = (net.fabricmc.loader.language.LanguageAdapter) Class.forName(languageAdapter, true, NotebookLauncherBase.getLauncher().getTargetClassLoader()).getConstructor().newInstance();
 				object = adapter.createInstance(value, options);
 			}
 

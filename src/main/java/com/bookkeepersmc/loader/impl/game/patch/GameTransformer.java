@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.zip.ZipError;
 
-import com.bookkeepersmc.loader.impl.launch.FabricLauncher;
+import com.bookkeepersmc.loader.impl.launch.NotebookLauncher;
 import com.bookkeepersmc.loader.impl.util.ExceptionUtil;
 import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.SimpleClassPath;
@@ -59,7 +59,7 @@ public class GameTransformer {
 		patchedClasses.put(key, writer.toByteArray());
 	}
 
-	public void locateEntrypoints(FabricLauncher launcher, List<Path> gameJars) {
+	public void locateEntrypoints(NotebookLauncher launcher, List<Path> gameJars) {
 		if (entrypointsLocated) {
 			return;
 		}
