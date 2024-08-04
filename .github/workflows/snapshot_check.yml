@@ -1,0 +1,141 @@
+name: Snapshot check
+on:
+  schedule:
+    - cron: "*/30 6-19 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  check:
+    env:
+      LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
+      LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
+      LATEST_LOADER: ${{ vars.LATEST_LOADER_VERSION }}
+
+    if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
+    outputs:
+      is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
+      old_version: ${{ toJson(fromJson(steps.check.outputs.result).old_version) }}
+      new_version: ${{ toJson(fromJson(steps.check.outputs.result).new_version) }}
+      loader_version: ${{ toJson(fromJson(steps.check.outputs.result).loader_version) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Version Manifest
+        id: version_manifest
+        run: echo "latest_snapshot=$(wget -O - https://piston-meta.mojang.com/mc/game/version_manifest_v2.json | jq -r .latest.snapshot)" >> $GITHUB_OUTPUT
+      - name: Get loader latest
+        id: latest_loader
+        run: echo "latest_loader=$(wget -O - https://raw.githubusercontent.com/BookkeepersMC/notebook-loader/master/src/main/resources/latest_loader.json | jq -r .latest.stable)" >> $GITHUB_OUTPUT
+      - name: Check latest snapshot
+        id: check
+        uses: actions/github-script@v7
+        env:
+          NEW_LATEST_VERSION: ${{ steps.version_manifest.outputs.latest_snapshot }}
+          NEW_LOADER_VERSION: ${{ steps.latest_loader.outputs.latest_loader }}
+        with:
+          script: |
+            function getInfo(name) {
+              var type = "";
+              var april = false;
+              if (/^\d+\.\d+(\.\d+)?$/.test(name)) {
+                type = "release";
+              } else if (/^\d{2}w\d{2}[a-z]$/.test(name)) {
+                type = "snapshot";
+              } else if (/^\d+\.\d+(.\d+)?-(pre|rc)\d+$/.test(name) || /^\d+\.\d+.\d+-rc\d+$/.test(name)) {
+                type = "pre";
+              } else {
+                // If it doesn't match anything guess that it's an april fools release
+                type = "snapshot";
+                april = true;
+              }
+              return {type: type, april: april, version: name}
+            }
+
+            const latestSnapshot = process.env.NEW_LATEST_VERSION
+            const latestLoader = process.env.NEW_LATEST_LOADER
+
+            const newVersionInfo = getInfo(latestSnapshot);
+            const newLoaderInfo = getInfo(latestLoader);
+            const oldVersion = process.env.LATEST_MAINLINE;
+            const oldVersionInfo = getInfo(oldVersion);
+
+            if (process.env.LATEST_VERSION === latestSnapshot || ) {
+              core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
+              return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
+            } else if (process.env.LATEST_LOADER === latestLoader) {
+              core.info("No new loader versions have been released since " + process.env.LATEST_LOADER)
+              return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false}
+            }
+
+            core.info("Found new snapshot: " + latestSnapshot)
+            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};  
+
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Store Latest Snapshot Version
+        uses: octokit/request-action@v2.3.0
+        with:
+          route: PATCH /repos/{repo}/actions/variables/{name}
+          repo: ${{ github.repository }}
+          name: LATEST_MC_VERSION
+          value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+      - name: Store Latest Mainline Version
+        if: ${{ !fromJson(needs.check.outputs.new_version).april }}
+        uses: octokit/request-action@v2.3.0
+        with:
+          route: PATCH /repos/{repo}/actions/variables/{name}
+          repo: ${{ github.repository }}
+          name: LATEST_MAINLINE_VERSION
+          value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+
+      - name: Store Latest Loader Version
+        uses: octokit/request-action@v2.3.0
+        with:
+          route: PATCH /repos/{repo}/actions/variables/{name}
+          repo: ${{ github.repository }}
+          name: LATEST_LOADER_VERSION
+          value: "\"${{ fromJson(needs.check.outputs.loader_version).version }}\""
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout meta
+        uses: actions/checkout@v4
+        with:
+          repository: BookkeepersMC/meta
+          path: "./meta/"
+          ref: master
+          token: ${{ secrets.VARIABLES_TOKEN }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build and Publish
+        run: ./gradlew generateLauncherJson --stacktrace
+        env:
+          MC_VERSION: ${{ vars.LATEST_MC_VERSION }}
+
+      - name: Commit artifacts back to meta repo
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: "./versions/"
+          cwd: "./meta/"
+          default_author: github_actions
+          message: "New Launcher JSON."

@@ -2,13 +2,13 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 // A task to install the development version of Fabric Loader to the Minecraft launcher
-tasks.register("installDevelopmentVersion", InstallDevelopmentVersionTask) {
+tasks.register("generateLauncherJson", GenerateLauncherJsonTask) {
 	installerJson = file("src/main/resources/fabric-installer.json")
 	loaderJar = proguardJar.outputs.files.singleFile
 	dependsOn proguardJar
 }
 
-abstract class InstallDevelopmentVersionTask extends DefaultTask {
+abstract class GenerateLauncherJsonTask extends DefaultTask {
 	@Input
 	@Option(option = "mc-version", description = "The Minecraft version to install")
 	abstract Property<String> getMinecraftVersion()
@@ -29,14 +29,14 @@ abstract class InstallDevelopmentVersionTask extends DefaultTask {
 	@OutputFile
 	abstract RegularFileProperty getLoaderLibraryFile()
 
-	InstallDevelopmentVersionTask() {
+	GenerateLauncherJsonTask() {
 		versionName.convention("notebook-loader-${project.version.toString()}")
 		minecraftVersion.convention("1.20.2")
 		versionJsonFile.set(project.layout.file(project.provider {
-			new File("${project.rootDir}/meta/versions/${versionName.get()}-${minecraftVersion.get()}.json")
+			new File("${project.rootDir}/meta/versions/game/${versionName.get()}-${minecraftVersion.get()}.json")
 		}))
 		loaderLibraryFile.set(project.layout.file(project.provider {
-			new File("${project.rootDir}/libraries/net/fabricmc/notebook-loader/${project.version.toString()}/notebook-loader-${project.version.toString()}.jar")
+			new File("${project.rootDir}/libraries/notebook-loader-${project.version.toString()}.jar")
 		}))
 	}
 
@@ -59,8 +59,8 @@ abstract class InstallDevelopmentVersionTask extends DefaultTask {
 		]
 
 		versionMeta.libraries.add([
-			name: "net.fabricmc:fabric-loader:${project.version.toString()}",
-			url: "https://maven.fabricmc.net/",
+			name: "com.bookkeepersmc:notebook-loader:${project.version.toString()}",
+			url: "https://bookkeepersmc.github.io/m2/",
 		])
 
 		versionMeta.libraries.add([
@@ -71,18 +71,7 @@ abstract class InstallDevelopmentVersionTask extends DefaultTask {
 		versionJsonFile.get().getAsFile().parentFile.mkdirs()
 		versionJsonFile.get().asFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(versionMeta))
 
-		project.logger.lifecycle("Installed Fabric Loader ${project.version.toString()} for Minecraft ${minecraftVersion.get()} as ${versionName.get()}")
-	}
-
-	static File getDotMinecraftDirectory() {
-		def os = System.getProperty("os.name").toLowerCase(Locale.ROOT)
-		if (os.contains("win")) {
-			return new File(System.getenv("APPDATA"), ".minecraft")
-		} else if (os.contains("mac")) {
-			return new File(System.getProperty("user.home"), "Library/Application Support/minecraft")
-		} else {
-			return new File(System.getProperty("user.home"), ".minecraft")
-		}
+		project.logger.lifecycle("Installed Notebook ${project.version.toString()} for Minecraft ${minecraftVersion.get()} as ${versionName.get()}")
 	}
 }
 
