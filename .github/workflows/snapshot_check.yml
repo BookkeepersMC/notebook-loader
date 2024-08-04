@@ -66,11 +66,11 @@ jobs:
               return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
             } else if (process.env.LATEST_LOADER === latestLoader) {
               core.info("No new loader versions have been released since " + process.env.LATEST_LOADER)
-              return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false}
+              return {old_version: oldVersionInfo, loader_version: loaderVersionInfo, new_version: newVersionInfo, is_new: false}
             }
 
             core.info("Found new snapshot: " + latestSnapshot)
-            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};  
+            return {old_version: oldVersionInfo, loader_version: loaderVersionInfo, new_version: newVersionInfo, is_new: true};  
 
   update:
     runs-on: ubuntu-latest
