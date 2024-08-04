@@ -15,7 +15,6 @@ jobs:
       LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
       LATEST_LOADER: ${{ vars.LATEST_LOADER_VERSION }}
 
-    if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
     outputs:
       is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
       old_version: ${{ toJson(fromJson(steps.check.outputs.result).old_version) }}
@@ -62,7 +61,7 @@ jobs:
             const oldVersion = process.env.LATEST_MAINLINE;
             const oldVersionInfo = getInfo(oldVersion);
 
-            if (process.env.LATEST_VERSION === latestSnapshot || ) {
+            if (process.env.LATEST_VERSION === latestSnapshot) {
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
               return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
             } else if (process.env.LATEST_LOADER === latestLoader) {
