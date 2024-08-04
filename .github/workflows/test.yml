@@ -1,0 +1,42 @@
+name: Snapshot check
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: BookkeepersMC/meta
+          path: "./meta/"
+          ref: master
+          token: ${{ secrets.VARIABLES_TOKEN }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build and Publish
+        run: ./gradlew installDevelopmentVersion --mc-version="1.21" --stacktrace
+
+      - name: Commit artifacts back to repo
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: "./versions/"
+          cwd: "./meta/"
+          default_author: github_actions
+          message: "New Launcher JSON. Released at ${{ steps.datetime.outputs.time_now }} "

@@ -33,10 +33,10 @@ abstract class InstallDevelopmentVersionTask extends DefaultTask {
 		versionName.convention("notebook-loader-${project.version.toString()}")
 		minecraftVersion.convention("1.20.2")
 		versionJsonFile.set(project.layout.file(project.provider {
-			new File(getDotMinecraftDirectory(), "versions/${versionName.get()}/${versionName.get()}.json")
+			new File("${project.rootDir}/meta/versions/${versionName.get()}-${minecraftVersion.get()}.json")
 		}))
 		loaderLibraryFile.set(project.layout.file(project.provider {
-			new File(getDotMinecraftDirectory(), "libraries/net/fabricmc/notebook-loader/${project.version.toString()}/notebook-loader-${project.version.toString()}.jar")
+			new File("${project.rootDir}/libraries/net/fabricmc/notebook-loader/${project.version.toString()}/notebook-loader-${project.version.toString()}.jar")
 		}))
 	}
 
