@@ -130,7 +130,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build and Publish
-        run: ./gradlew generateLauncherJson --stacktrace
+        run: ./gradlew generateLauncherJson generateServerLauncherJson --stacktrace
         env:
           MC_VERSION: ${{ vars.LATEST_MC_VERSION }}
 

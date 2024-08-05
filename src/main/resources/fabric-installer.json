@@ -67,7 +67,7 @@
         "development": [
             {
                 "name": "io.github.llamalad7:mixinextras-notebook:0.4.0",
-                "url": "https://bookkeepersmc.github.io/m2/",
+                "url": "https://maven.fabricmc.net/",
                 "md5": "05c6a38b174c1fe01f58e4dacd816445",
                 "sha1": "9a5772265619b28dc94a1f5c17c3bae25798b77a",
                 "sha256": "bccc4df042b939da5fca91fd4c0cb38387f14302430aa551da248d586e518fa4",
