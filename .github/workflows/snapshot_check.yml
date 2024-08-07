@@ -13,27 +13,21 @@ jobs:
     env:
       LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
       LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
-      LATEST_LOADER: ${{ vars.LATEST_LOADER_VERSION }}
 
     outputs:
       is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
       old_version: ${{ toJson(fromJson(steps.check.outputs.result).old_version) }}
       new_version: ${{ toJson(fromJson(steps.check.outputs.result).new_version) }}
-      loader_version: ${{ toJson(fromJson(steps.check.outputs.result).loader_version) }}
     runs-on: ubuntu-latest
     steps:
       - name: Get Version Manifest
         id: version_manifest
         run: echo "latest_snapshot=$(wget -O - https://piston-meta.mojang.com/mc/game/version_manifest_v2.json | jq -r .latest.snapshot)" >> $GITHUB_OUTPUT
-      - name: Get loader latest
-        id: latest_loader
-        run: echo "latest_loader=$(wget -O - https://raw.githubusercontent.com/BookkeepersMC/notebook-loader/master/src/main/resources/latest_loader.json | jq -r .latest.stable)" >> $GITHUB_OUTPUT
       - name: Check latest snapshot
         id: check
         uses: actions/github-script@v7
         env:
           NEW_LATEST_VERSION: ${{ steps.version_manifest.outputs.latest_snapshot }}
-          NEW_LOADER_VERSION: ${{ steps.latest_loader.outputs.latest_loader }}
         with:
           script: |
             function getInfo(name) {
@@ -54,23 +48,18 @@ jobs:
             }
 
             const latestSnapshot = process.env.NEW_LATEST_VERSION
-            const latestLoader = process.env.NEW_LATEST_LOADER
 
             const newVersionInfo = getInfo(latestSnapshot);
-            const newLoaderInfo = getInfo(latestLoader);
             const oldVersion = process.env.LATEST_MAINLINE;
             const oldVersionInfo = getInfo(oldVersion);
 
             if (process.env.LATEST_VERSION === latestSnapshot) {
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
               return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
-            } else if (process.env.LATEST_LOADER === latestLoader) {
-              core.info("No new loader versions have been released since " + process.env.LATEST_LOADER)
-              return {old_version: oldVersionInfo, loader_version: loaderVersionInfo, new_version: newVersionInfo, is_new: false}
             }
 
             core.info("Found new snapshot: " + latestSnapshot)
-            return {old_version: oldVersionInfo, loader_version: loaderVersionInfo, new_version: newVersionInfo, is_new: true};  
+            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};  
 
   update:
     runs-on: ubuntu-latest
@@ -95,16 +84,6 @@ jobs:
           repo: ${{ github.repository }}
           name: LATEST_MAINLINE_VERSION
           value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
-
-      - name: Store Latest Loader Version
-        uses: octokit/request-action@v2.3.0
-        with:
-          route: PATCH /repos/{repo}/actions/variables/{name}
-          repo: ${{ github.repository }}
-          name: LATEST_LOADER_VERSION
-          value: "\"${{ fromJson(needs.check.outputs.loader_version).version }}\""
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
 
