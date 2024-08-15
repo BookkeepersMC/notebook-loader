@@ -67,11 +67,11 @@ public final class RuntimeModRemapper {
 	private static final String REMAP_TYPE_MANIFEST_KEY = "Fabric-Loom-Mixin-Remap-Type";
 	private static final String REMAP_TYPE_STATIC = "static";
 
-	public static void remap(Collection<ModCandidate> modCandidates, Path tmpDir, Path outputDir) {
-		List<ModCandidate> modsToRemap = new ArrayList<>();
+	public static void remap(Collection<ModCandidateImpl> modCandidates, Path tmpDir, Path outputDir) {
+		List<ModCandidateImpl> modsToRemap = new ArrayList<>();
 		Set<InputTag> remapMixins = new HashSet<>();
 
-		for (ModCandidate mod : modCandidates) {
+		for (ModCandidateImpl mod : modCandidates) {
 			if (mod.getRequiresRemap()) {
 				modsToRemap.add(mod);
 			}
@@ -93,10 +93,10 @@ public final class RuntimeModRemapper {
 			throw new RuntimeException("Failed to populate remap classpath", e);
 		}
 
-		Map<ModCandidate, RemapInfo> infoMap = new HashMap<>();
+		Map<ModCandidateImpl, RemapInfo> infoMap = new HashMap<>();
 
 		try {
-			for (ModCandidate mod : modsToRemap) {
+			for (ModCandidateImpl mod : modsToRemap) {
 				RemapInfo info = new RemapInfo();
 				infoMap.put(mod, info);
 
@@ -124,7 +124,7 @@ public final class RuntimeModRemapper {
 			}
 
 			//Done in a 2nd loop as we need to make sure all the inputs are present before remapping
-			for (ModCandidate mod : modsToRemap) {
+			for (ModCandidateImpl mod : modsToRemap) {
 				RemapInfo info = infoMap.get(mod);
 				OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(info.outputPath).build();
 
@@ -143,7 +143,7 @@ public final class RuntimeModRemapper {
 			}
 
 			//Done in a 3rd loop as this can happen when the remapper is doing its thing.
-			for (ModCandidate mod : modsToRemap) {
+			for (ModCandidateImpl mod : modsToRemap) {
 				RemapInfo info = infoMap.get(mod);
 
 				String accessWidener = mod.getMetadata().getAccessWidener();
@@ -162,7 +162,7 @@ public final class RuntimeModRemapper {
 
 			remapper.finish();
 
-			for (ModCandidate mod : modsToRemap) {
+			for (ModCandidateImpl mod : modsToRemap) {
 				RemapInfo info = infoMap.get(mod);
 
 				info.outputConsumerPath.close();

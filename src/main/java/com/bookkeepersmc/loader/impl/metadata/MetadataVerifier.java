@@ -34,14 +34,14 @@ import java.util.stream.Collectors;
 
 import com.bookkeepersmc.loader.api.SemanticVersion;
 import com.bookkeepersmc.loader.api.VersionParsingException;
-import com.bookkeepersmc.loader.impl.discovery.ModCandidate;
+import com.bookkeepersmc.loader.impl.discovery.ModCandidateImpl;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
 public final class MetadataVerifier {
 	private static final Pattern MOD_ID_PATTERN = Pattern.compile("[a-z][a-z0-9-_]{1,63}");
 
-	public static ModCandidate verifyIndev(ModCandidate mod, boolean isDevelopment) {
+	public static ModCandidateImpl verifyIndev(ModCandidateImpl mod, boolean isDevelopment) {
 		if (isDevelopment) {
 			try {
 				MetadataVerifier.verify(mod.getMetadata(), isDevelopment);

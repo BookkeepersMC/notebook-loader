@@ -36,7 +36,7 @@ import java.util.Optional;
 
 import com.bookkeepersmc.loader.api.ModContainer;
 import com.bookkeepersmc.loader.api.metadata.ModOrigin;
-import com.bookkeepersmc.loader.impl.discovery.ModCandidate;
+import com.bookkeepersmc.loader.impl.discovery.ModCandidateImpl;
 import com.bookkeepersmc.loader.impl.metadata.LoaderModMetadata;
 import com.bookkeepersmc.loader.impl.metadata.ModOriginImpl;
 import com.bookkeepersmc.loader.impl.util.FileSystemUtil;
@@ -53,13 +53,13 @@ public class ModContainerImpl extends net.fabricmc.loader.ModContainer {
 
 	private volatile List<Path> roots;
 
-	public ModContainerImpl(ModCandidate candidate) {
+	public ModContainerImpl(ModCandidateImpl candidate) {
 		this.info = candidate.getMetadata();
 		this.codeSourcePaths = candidate.getPaths();
 		this.parentModId = candidate.getParentMods().isEmpty() ? null : candidate.getParentMods().iterator().next().getId();
 		this.childModIds = candidate.getNestedMods().isEmpty() ? Collections.emptyList() : new ArrayList<>(candidate.getNestedMods().size());
 
-		for (ModCandidate c : candidate.getNestedMods()) {
+		for (ModCandidateImpl c : candidate.getNestedMods()) {
 			if (c.getParentMods().size() <= 1 || c.getParentMods().iterator().next() == candidate) {
 				childModIds.add(c.getId());
 			}
