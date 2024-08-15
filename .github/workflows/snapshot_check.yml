@@ -12,7 +12,6 @@ jobs:
   check:
     env:
       LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
-      LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
 
     outputs:
       is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
@@ -50,7 +49,7 @@ jobs:
             const latestSnapshot = process.env.NEW_LATEST_VERSION
 
             const newVersionInfo = getInfo(latestSnapshot);
-            const oldVersion = process.env.LATEST_MAINLINE;
+            const oldVersion = process.env.LATEST_VERSION;
             const oldVersionInfo = getInfo(oldVersion);
 
             if (process.env.LATEST_VERSION === latestSnapshot) {
@@ -93,16 +92,6 @@ jobs:
           route: PATCH /repos/{repo}/actions/variables/{name}
           repo: ${{ github.repository }}
           name: LATEST_MC_VERSION
-          value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
-      - name: Store Latest Version
-        if: ${{ !fromJson(needs.check.outputs.new_version).april }}
-        uses: octokit/request-action@v2.3.0
-        with:
-          route: PATCH /repos/{repo}/actions/variables/{name}
-          repo: ${{ github.repository }}
-          name: LATEST_MAINLINE_VERSION
           value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
