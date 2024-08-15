@@ -30,7 +30,7 @@ abstract class GenerateLauncherJsonTask extends DefaultTask {
 	abstract RegularFileProperty getLoaderLibraryFile()
 
 	GenerateLauncherJsonTask() {
-		versionName.convention("notebook-loader-${project.version.toString()}")
+		versionName.convention("notebook-loader-${project.version.toString()}-${minecraftVersion.get()}")
 		minecraftVersion.convention(System.getenv("MC_VERSION"))
 		versionJsonFile.set(project.layout.file(project.provider {
 			new File("${project.rootDir}/meta/versions/game/${versionName.get()}-${minecraftVersion.get()}.json")
