@@ -22,9 +22,8 @@ jobs:
       - run: ./gradlew publish --stacktrace
 
       # And then the JUNIT
-      - run: cd junit
-      - run: .././gradlew build
-      - run: .././gradlew publish
+      - run: ./gradlew :junit:build
+      - run: ./gradlew :junit:publish
 
       - uses: EndBug/add-and-commit@v9.1.4
         with:
