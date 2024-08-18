@@ -17,7 +17,9 @@ jobs:
           path: './m2/'
           ref: 'master'
           token: ${{ secrets.GIT_PAT }}
-      - run: ./gradlew build publish --stacktrace
+      - run: ./gradlew build --stacktrace
+        # We run publish AFTER build because publish needs the output of build's 'proguardJar'
+      - run: ./gradlew publish --stacktrace
 
       - uses: EndBug/add-and-commit@v9.1.4
         with:
