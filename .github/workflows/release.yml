@@ -21,6 +21,12 @@ jobs:
         # We run publish AFTER build because publish needs the output of build's 'proguardJar'
       - run: ./gradlew publish --stacktrace
 
+      # And then the JUNIT
+      - run: cd junit
+      - run: chmod +x ../gradlew
+      - run: .././gradlew build
+      - run: .././gradlew publish
+
       - uses: EndBug/add-and-commit@v9.1.4
         with:
           add: './com/'
