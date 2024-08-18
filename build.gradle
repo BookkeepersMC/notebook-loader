@@ -359,10 +359,8 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		if (ENV.MAVEN_URL) {
-			maven {
-				url "file://${rootProject.rootDir}/m2/"
-			}
+		maven {
+			url "file://${rootProject.rootDir}/m2/"
 		}
 	}
 }
