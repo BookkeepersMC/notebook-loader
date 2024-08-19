@@ -21,16 +21,9 @@ jobs:
         # We run publish AFTER build because publish needs the output of build's 'proguardJar'
       - run: ./gradlew publish --stacktrace
 
-      # And then the JUNIT
-      - run: ./gradlew :junit:build
-      - run: ./gradlew :junit:publish
-
-      - run: ls -la
-        working-directory: m2/com/bookkeepersmc/notebook-loader-junit
-
-    #  - uses: EndBug/add-and-commit@v9.1.4
-        #with:
-          #add: './com/'
-          #author_name: CrypticVerse
-          #cwd: './m2/'
-          #message: "Publish Loader"
+      - uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: './com/'
+          default_author: github_actions
+          cwd: './m2/'
+          message: "Publish Loader"
