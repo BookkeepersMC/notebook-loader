@@ -25,9 +25,8 @@ jobs:
       - run: ./gradlew :junit:build
       - run: ./gradlew :junit:publish
 
-      - run: cd m2
       - run: ls -la
-      - run: cd ../
+        working-directory: m2
 
       - uses: EndBug/add-and-commit@v9.1.4
         with:
