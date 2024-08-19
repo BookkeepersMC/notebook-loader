@@ -26,11 +26,11 @@ jobs:
       - run: ./gradlew :junit:publish
 
       - run: ls -la
-        working-directory: m2
+        working-directory: m2/com/bookkeepersmc/notebook-loader-junit
 
-      - uses: EndBug/add-and-commit@v9.1.4
-        with:
-          add: './com/'
-          author_name: CrypticVerse
-          cwd: './m2/'
-          message: "Publish Loader"
+    #  - uses: EndBug/add-and-commit@v9.1.4
+        #with:
+          #add: './com/'
+          #author_name: CrypticVerse
+          #cwd: './m2/'
+          #message: "Publish Loader"
