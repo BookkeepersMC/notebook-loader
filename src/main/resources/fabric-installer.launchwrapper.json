@@ -52,13 +52,13 @@
                 "size": 91131
             },
             {
-                "name": "net.fabricmc:sponge-mixin:0.15.0+mixin.0.8.7",
+                "name": "net.fabricmc:sponge-mixin:0.15.3+mixin.0.8.7",
                 "url": "https://maven.fabricmc.net/",
-                "md5": "65ff9052ede9283e70770e0cd4eccdf4",
-                "sha1": "2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156",
-                "sha256": "265ffe8b5b3a6b7e0c93749fe431bbb58523b429663caf1bc722d4ed72856702",
-                "sha512": "aab4337b86572ecaef1754ad39a76b946e5862ab54e87f2496992a01f9da7aa3e0025e9655a702bd83b87f5e91eb8576e7efcc4c5060c699c07876bc68b23e50",
-                "size": 1494859
+                "md5": "a33725dd52de94c33514b6867c8d0b4b",
+                "sha1": "51ee0a44ab05f6fddd66b09e66b3a16904f9c55d",
+                "sha256": "0a7735e98905e445a7ddb0eef617ebfb5166ac95c293206cce4241aab7be56fd",
+                "sha512": "3be527b0122a54a1cd5b542a45afd7a9d3d1186fd7d0c62a6c704656229e426a283be35ae285dbd188817467a307f969b0aef28dfa8fa1f360fafdb6a561c9db",
+                "size": 1494835
             },
             {
                 "name": "net.minecraft:launchwrapper:1.12",
@@ -72,13 +72,13 @@
         ],
         "development": [
             {
-                "name": "io.github.llamalad7:mixinextras-notebook:0.4.0",
+                "name": "io.github.llamalad7:mixinextras-notebook:0.5.0-beta.3",
                 "url": "https://bookkeepersmc.github.io/m2/",
-                "md5": "05c6a38b174c1fe01f58e4dacd816445",
-                "sha1": "9a5772265619b28dc94a1f5c17c3bae25798b77a",
-                "sha256": "bccc4df042b939da5fca91fd4c0cb38387f14302430aa551da248d586e518fa4",
-                "sha512": "d811ca32a77ffa83be88338243b44b115805680470a5bbb9799a6b510be58a111d0ee8361ab9b37998a247b01d96fe999e0187db2c1adfebfc1474d66ea593dd",
-                "size": 202064
+                "md5": "2eba3f2913c189d4abf16289075900f6",
+                "sha1": "08b86e3b97048de1b35199cd1147770e880e3843",
+                "sha256": "d4330d09945ea26f4bb993d077768e4528355719432600a771dc61e84fc3caa2",
+                "sha512": "25c5105f3fadc63f7de224941e9b87052b8d4562256c5418b50fa623531c4adfcea2afea8460042be3f7ad73452b76363161dede5755e5f721509a3c4d9d2812",
+                "size": 717554
             }
         ]
     },
