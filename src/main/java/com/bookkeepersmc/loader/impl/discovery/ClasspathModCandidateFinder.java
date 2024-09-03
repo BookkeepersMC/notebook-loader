@@ -60,7 +60,8 @@ public class ClasspathModCandidateFinder implements ModCandidateFinder {
 					URL url = mods.nextElement();
 
 					try {
-						Path path = LoaderUtil.normalizeExistingPath(UrlUtil.getCodeSource(url, "notebook.mod.json"));
+						Path path = UrlUtil.getCodeSource(url, "notebook.mod.json");
+						assert path.equals(LoaderUtil.normalizeExistingPath(path));
 						List<Path> paths = pathGroups.get(path);
 
 						if (paths == null) {

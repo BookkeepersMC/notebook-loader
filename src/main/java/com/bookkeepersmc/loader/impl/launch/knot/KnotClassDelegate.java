@@ -518,7 +518,10 @@ final class KnotClassDelegate<T extends ClassLoader & ClassLoaderAccess> impleme
 
 	private static Path getCodeSource(URL url, String fileName) {
 		try {
-			return LoaderUtil.normalizeExistingPath(UrlUtil.getCodeSource(url, fileName));
+			Path ret = UrlUtil.getCodeSource(url, fileName);
+			assert ret.equals(LoaderUtil.normalizeExistingPath(ret));
+
+			return ret;
 		} catch (UrlConversionException e) {
 			throw ExceptionUtil.wrap(e);
 		}

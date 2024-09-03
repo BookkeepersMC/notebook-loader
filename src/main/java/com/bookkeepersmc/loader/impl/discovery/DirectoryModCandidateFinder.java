@@ -31,6 +31,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
 
+import com.bookkeepersmc.loader.impl.util.LoaderUtil;
 import com.bookkeepersmc.loader.impl.util.log.Log;
 import com.bookkeepersmc.loader.impl.util.log.LogCategory;
 
@@ -39,7 +40,7 @@ public class DirectoryModCandidateFinder implements ModCandidateFinder {
 	private final boolean requiresRemap;
 
 	public DirectoryModCandidateFinder(Path path, boolean requiresRemap) {
-		this.path = path;
+		this.path = LoaderUtil.normalizePath(path);
 		this.requiresRemap = requiresRemap;
 	}
 
@@ -48,6 +49,7 @@ public class DirectoryModCandidateFinder implements ModCandidateFinder {
 		if (!Files.exists(path)) {
 			try {
 				Files.createDirectory(path);
+				return;
 			} catch (IOException e) {
 				throw new RuntimeException("Could not create directory " + path, e);
 			}

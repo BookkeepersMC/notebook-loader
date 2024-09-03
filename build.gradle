@@ -116,6 +116,7 @@ dependencies {
 		// Mapping-io depends on ASM, dont bundle
 		transitive = false
 	}
+	include project("junit")
 
 	testCompileOnly 'org.jetbrains:annotations:23.0.0'
 
