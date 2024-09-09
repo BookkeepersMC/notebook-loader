@@ -1,7 +1,7 @@
 name: Snapshot check
 on:
   schedule:
-    - cron: "*/30 6-19 * * *"
+    - cron: "*/60 6-19 * * *"
   workflow_dispatch:
 
 permissions:
