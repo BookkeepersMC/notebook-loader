@@ -18,13 +18,19 @@ jobs:
         id: delete
         continue-on-error: true
         run: gh run list --json databaseId -q '.[].databaseId' -w snapshot_check.yml --limit 750 | xargs -IID -P 15 gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions/runs/ID" -X DELETE
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Delete runs
         if: steps.delete.outcome == 'failure'
         id: delete2
         continue-on-error: true
         run: gh run list --json databaseId -q '.[].databaseId' -w snapshot_check.yml --limit 750 | xargs -IID -P 15 gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions/runs/ID" -X DELETE
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Delete runs
         if: steps.delete2.outcome == 'failure'
         id: delete3
         continue-on-error: true
         run: gh run list --json databaseId -q '.[].databaseId' -w snapshot_check.yml --limit 750 | xargs -IID -P 15 gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions/runs/ID" -X DELETE
+        env:
+          GH_TOKEN: ${{ github.token }}
