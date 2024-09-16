@@ -5,6 +5,7 @@ import groovy.json.JsonSlurper
 tasks.register("generateLauncherJson", GenerateLauncherJsonTask) {
 	installerJson = file("src/main/resources/fabric-installer.json")
 	loaderJar = proguardJar.outputs.files.singleFile
+	versionName.convention("notebook-loader-${project.version.toString()}-${getMinecraftVersion()}")
 	dependsOn proguardJar
 }
 
@@ -30,7 +31,7 @@ abstract class GenerateLauncherJsonTask extends DefaultTask {
 	abstract RegularFileProperty getLoaderLibraryFile()
 
 	GenerateLauncherJsonTask() {
-		minecraftVersion.convention("1.21")
+		minecraftVersion.convention(System.getenv("MC_VERSION"))
 		versionName.convention("notebook-loader-${project.version.toString()}-${minecraftVersion.get()}")
 		versionJsonFile.set(project.layout.file(project.provider {
 			new File("${project.rootDir}/meta/versions/game/${versionName.get()}.json")
