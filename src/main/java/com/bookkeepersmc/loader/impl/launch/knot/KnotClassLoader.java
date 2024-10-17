@@ -34,9 +34,10 @@ import java.util.Objects;
 import com.bookkeepersmc.api.EnvType;
 import com.bookkeepersmc.loader.impl.game.GameProvider;
 import com.bookkeepersmc.loader.impl.launch.knot.KnotClassDelegate.ClassLoaderAccess;
+import com.bookkeepersmc.loader.impl.mrj.AbstractSecureClassLoader;
 
 // class name referenced by string constant in com.bookkeepersmc.loader.impl.util.LoaderUtil.verifyNotInTargetCl
-final class KnotClassLoader extends SecureClassLoader implements ClassLoaderAccess {
+final class KnotClassLoader extends AbstractSecureClassLoader implements ClassLoaderAccess {
 	private static final class DynamicURLClassLoader extends URLClassLoader {
 		private DynamicURLClassLoader(URL[] urls) {
 			super(urls, new DummyClassLoader());
@@ -57,7 +58,7 @@ final class KnotClassLoader extends SecureClassLoader implements ClassLoaderAcce
 	private final KnotClassDelegate<KnotClassLoader> delegate;
 
 	KnotClassLoader(boolean isDevelopment, EnvType envType, GameProvider provider) {
-		super(new DynamicURLClassLoader(new URL[0]));
+		super("knot", new DynamicURLClassLoader(new URL[0]));
 		this.originalLoader = getClass().getClassLoader();
 		this.urlLoader = (DynamicURLClassLoader) getParent();
 		this.delegate = new KnotClassDelegate<>(isDevelopment, envType, this, originalLoader, provider);

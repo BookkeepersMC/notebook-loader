@@ -58,6 +58,7 @@ sourceSets {
 	main {
 		java.srcDirs = ['src/main/java', 'src/main/legacyJava']
 	}
+	java17
 }
 
 configurations {
@@ -168,7 +169,7 @@ shadowJar {
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 // Renaming in the shadow jar task doesnt seem to work, so do it here
-task getSat4jAbout(type: Copy) {
+tasks.register("getSat4jAbout", Copy) {
 	dependsOn project.configurations.include
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
@@ -185,19 +186,21 @@ task getSat4jAbout(type: Copy) {
 	into layout.buildDirectory.dir("sat4j")
 }
 
-task fatJar(type: ShadowJar, dependsOn: getSat4jAbout) {
+tasks.register("fatJar", ShadowJar) {
+	dependsOn getSat4jAbout
 	from sourceSets.main.output
 	from project(":minecraft").sourceSets.main.output
 	from getSat4jAbout.destinationDir
 	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
+		rename { "${it}_${project.base.archivesName.get()}" }
 	}
 
 	manifest {
-		attributes (
+		attributes(
 			'Main-Class': 'com.bookkeepersmc.loader.impl.launch.server.FabricServerLauncher',
 			'Fabric-Loom-Remap': 'false',
-			'Automatic-Module-Name': 'com.bookkeepersmc.loader'
+			'Automatic-Module-Name': 'com.bookkeepersmc.loader',
+			"Multi-Release": 'true'
 		)
 	}
 
@@ -222,14 +225,16 @@ task fatJar(type: ShadowJar, dependsOn: getSat4jAbout) {
 	outputs.upToDateWhen { false }
 }
 
-File proguardFile = file("build/libs/notebook-loader-${version}.jar")
+File proguardTmpFile = file("build/tmp/notebook-loader-${version}.jar")
 
 import proguard.gradle.ProGuardTask
-task proguardJar(type: ProGuardTask, dependsOn: fatJar) {
+
+tasks.register('proguardJar', ProGuardTask) {
+	dependsOn fatJar
 	def classpath = project(":minecraft").configurations.compileClasspath
 
 	inputs.files(fatJar, classpath)
-	outputs.files(proguardFile)
+	outputs.files(proguardTmpFile)
 
 	doFirst {
 		classpath.resolve().forEach {
@@ -243,10 +248,21 @@ task proguardJar(type: ProGuardTask, dependsOn: fatJar) {
 	libraryjars java8.metadata.installationPath.file("jre/lib/rt.jar")
 
 	injars fatJar.archiveFile
-	outjars proguardFile
+	outjars proguardTmpFile
 	configuration file("proguard.conf")
 }
-build.dependsOn proguardJar
+
+tasks.register("finalJar", Zip) {
+	from zipTree(proguardTmpFile)
+	dependsOn(proguardJar)
+	into('META-INF/versions/17') {
+		from sourceSets.java17.output
+	}
+	destinationDirectory = file("build/libs")
+	archiveExtension = "jar"
+}
+
+build.dependsOn finalJar
 
 tasks.withType(AbstractArchiveTask) {
 	preserveFileTimestamps = false
@@ -259,19 +275,19 @@ sourcesJar {
 }
 
 // useful for creating test mod jar
-task testJar(type: Jar) {
+tasks.register('testJar', Jar) {
 	archiveClassifier = "test"
 	from sourceSets.test.output
 }
 
-task copyJson() {
+tasks.register("copyJson") {
 	def inJson = file('src/main/resources/fabric-installer.json')
 	def inLwJson = file('src/main/resources/fabric-installer.launchwrapper.json')
 
 	def outJson = file("build/libs/${project.base.archivesName.get()}-${version}.json")
 	def outLwJson = file("build/libs/${project.base.archivesName.get()}-${version}.launchwrapper.json")
 
-	inputs.files (inJson, inLwJson)
+	inputs.files(inJson, inLwJson)
 	outputs.files(outJson, outLwJson)
 
 	doLast {
@@ -285,12 +301,7 @@ tasks.build.dependsOn "copyJson"
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 
-	// The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-	// JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-	// We'll use that if it's available, but otherwise we'll use the older option.
-	if (JavaVersion.current().isJava9Compatible()) {
-		it.options.release = 8
-	}
+	it.options.release = it.name.contains("Java17") ? 17 : 8;
 }
 
 javadoc {
@@ -317,7 +328,7 @@ javadoc {
 	failOnError false
 }
 
-task javadocJar(type: Jar) {
+tasks.register('javadocJar', Jar) {
 	dependsOn javadoc
 	from javadoc.destinationDir
 	archiveClassifier = 'javadoc'
@@ -345,7 +356,7 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			// add all the jars that should be included when publishing to maven
-			artifact(proguardFile)
+			artifact(finalJar)
 			artifact(sourcesJar)
 			artifact javadocJar
 			artifact(file('src/main/resources/fabric-installer.json')) {
@@ -361,7 +372,11 @@ publishing {
 	// select the repositories you want to publish to
 	repositories {
 		maven {
-			url "file://${rootProject.rootDir}/m2/"
+			url ENV.MAVEN_URL
+			credentials {
+				username = ENV.MAVEN_USERNAME
+				password = ENV.MAVEN_PASSWORD
+			}
 		}
 	}
 }

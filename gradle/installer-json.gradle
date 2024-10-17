@@ -66,7 +66,7 @@ abstract class GenerateInstallerJsonTask extends DefaultTask {
 		configurations.get().each { side, name ->
 			def resolvedArtifacts = project.configurations.getByName(name).resolvedConfiguration.resolvedArtifacts
 			for (final def artifact in resolvedArtifacts) {
-				def getIfMixinExtras = artifact.toString().contains("mixinextras-notebook") ? "https://bookkeepersmc.github.io/m2/" : "https://maven.fabricmc.net/"
+				def getIfMixinExtras = artifact.toString().contains("mixinextras-notebook") ? "https://maven.bookkeepersmc.com/" : "https://maven.fabricmc.net/"
 				def library = [name: artifact.moduleVersion.toString(), url: getIfMixinExtras]
 				library.putAll(resolveHashes(artifact.moduleVersion.toString()))
 

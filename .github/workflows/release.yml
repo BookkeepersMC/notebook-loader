@@ -11,19 +11,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/checkout@v4
-        with:
-          repository: 'BookkeepersMC/m2'
-          path: './m2/'
-          ref: 'master'
-          token: ${{ secrets.GIT_PAT }}
       - run: ./gradlew build --stacktrace
         # We run publish AFTER build because publish needs the output of build's 'proguardJar'
       - run: ./gradlew publish --stacktrace
-
-      - uses: EndBug/add-and-commit@v9.1.4
-        with:
-          add: './com/'
-          default_author: github_actions
-          cwd: './m2/'
-          message: "Publish Loader"
+        env:
+          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

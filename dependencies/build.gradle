@@ -1,0 +1,108 @@
+plugins {
+	id 'maven-publish'
+	id 'java'
+}
+
+base.archivesName.set 'notebook-loader-dependencies'
+version = rootProject.version
+group = rootProject.group
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(8))
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		name = 'Mojang'
+		url = 'https://libraries.minecraft.net/'
+		content {
+			includeGroup "net.minecraft"
+		}
+	}
+}
+
+def ENV = System.getenv()
+
+configurations {
+	development {
+		transitive = false
+		canBeConsumed = true
+	}
+
+	published {
+		extendsFrom development
+	}
+
+	runtimeElements {
+		extendsFrom published
+		outgoing.artifacts.clear()
+		outgoing.variants.clear()
+	}
+
+	apiElements {
+		extendsFrom published
+		outgoing.artifacts.clear()
+		outgoing.variants.clear()
+	}
+
+	include {
+		transitive = false
+	}
+}
+
+[configurations.runtimeElements, configurations.apiElements].each {
+	it.exclude(group: 'org.quiltmc.quilt-config.serializers', module: 'toml')
+	it.exclude(group: 'org.quiltmc.quilt-config.serializers', module: 'json5')
+}
+
+dependencies {
+	// Non-"include"d dependencies must be added to the LoaderLibrary class as well.
+	published "org.ow2.asm:asm:${project.asm_version}"
+	published "org.ow2.asm:asm-analysis:${project.asm_version}"
+	published "org.ow2.asm:asm-commons:${project.asm_version}"
+	published "org.ow2.asm:asm-tree:${project.asm_version}"
+	published "org.ow2.asm:asm-util:${project.asm_version}"
+
+	published 'org.ow2.sat4j:org.ow2.sat4j.core:2.3.6'
+	published 'org.ow2.sat4j:org.ow2.sat4j.pb:2.3.6'
+
+	published("net.fabricmc:sponge-mixin:${project.mixin_version}") {
+		exclude module: 'launchwrapper'
+		exclude module: 'guava'
+	}
+	include "net.fabricmc:tiny-remapper:0.10.4"
+	include "net.fabricmc:access-widener:2.1.0"
+	include ('net.fabricmc:mapping-io:0.6.1') {
+		// Mapping-io depends on ASM, dont bundle
+		transitive = false
+	}
+
+	published "org.quiltmc:quilt-config:$quilt_config"
+	published "net.minecraft:launchwrapper:1.12"
+	published "org.jetbrains:annotations:24.0.0"
+
+	development "io.github.llamalad7:mixinextras-notebook:$mixin_extras_version"
+
+	include "org.quiltmc.quilt-config.serializers:toml:${project.quilt_config}"
+	include "org.quiltmc.quilt-config.serializers:json5:${project.quilt_config}"
+
+	include "com.electronwill.night-config:core:${project.night_config}"
+	include "com.electronwill.night-config:toml:${project.night_config}"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			artifactId project.archivesBaseName
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			url = "file://${rootProject.rootDir}/m2/"
+		}
+	}
+}

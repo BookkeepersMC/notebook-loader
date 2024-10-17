@@ -1,5 +1,3 @@
-import com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi
-
 pluginManagement {
 	repositories {
 		mavenCentral()
@@ -13,7 +11,16 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name='notebook-loader'
+
+plugins {
+	id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
+
+rootProject.name = 'notebook-loader'
+
+if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
+	throw new UnsupportedOperationException("Fabric Loader requires Java 17+ to build.")
+}
 
 include "minecraft"
 include "junit"

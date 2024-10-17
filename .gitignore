@@ -3,6 +3,7 @@
 
 # Folders
 !/gradle
+!/dependencies
 !/src
 !/.github
 
