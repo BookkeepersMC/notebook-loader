@@ -1,5 +1,10 @@
 import groovy.json.JsonOutput
 
+tasks.register("generateAllInstallerJsons") {
+	dependsOn(generateInstallerJson)
+	dependsOn(generateLaunchWrapperInstallerJson)
+}
+
 tasks.register("generateInstallerJson", GenerateInstallerJsonTask) {
 	configurations = [ common: "installer", development: "development" ]
 	outputFile = file("src/main/resources/fabric-installer.json")
