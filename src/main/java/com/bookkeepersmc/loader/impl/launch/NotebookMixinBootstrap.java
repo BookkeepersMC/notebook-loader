@@ -80,9 +80,9 @@ public final class NotebookMixinBootstrap {
 					try {
 						MixinIntermediaryDevRemapper remapper = new MixinIntermediaryDevRemapper(mappings, "intermediary", mappingConfiguration.getTargetNamespace());
 						MixinEnvironment.getDefaultEnvironment().getRemappers().add(remapper);
-						Log.info(LogCategory.MIXIN, "Loaded Fabric development mappings for mixin remapper!");
+						Log.info(LogCategory.MIXIN, "Loaded development mappings for mixin remapper!");
 					} catch (Exception e) {
-						Log.error(LogCategory.MIXIN, "Fabric development environment setup error - the game will probably crash soon!");
+						Log.error(LogCategory.MIXIN, "Development environment setup error - the game will probably crash soon!");
 						e.printStackTrace();
 					}
 				}
@@ -99,7 +99,7 @@ public final class NotebookMixinBootstrap {
 				try {
 					Mixins.addConfiguration(config);
 				} catch (Throwable t) {
-					throw new RuntimeException(String.format("Error creating Mixin config %s for mod %s", config, mod.getMetadata().getId()), t);
+					throw new RuntimeException(String.format("Error parsing Mixin config %s for mod %s", config, mod.getMetadata().getId()), t);
 				}
 			}
 		}
