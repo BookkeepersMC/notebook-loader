@@ -45,7 +45,11 @@ publishing {
 
 	repositories {
 		maven {
-			url "file://${rootProject.rootDir}/m2/"
+			url ENV.MAVEN_URL
+			credentials {
+				username = ENV.MAVEN_USERNAME
+				password = ENV.MAVEN_PASSWORD
+			}
 		}
 	}
 }
